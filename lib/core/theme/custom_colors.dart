@@ -14,4 +14,7 @@ class CustomColors {
   static const Color accentColor2 = Color(0xFF237AF1);
   static const Color accentColor3 = Color(0xFFFEB800);
   static const Color accentColor4 = Color(0xFF3EE402);
+
+  static const Color primary = Color(0xFF3F206C);
+  static const Color transparent = Colors.transparent;
 }
