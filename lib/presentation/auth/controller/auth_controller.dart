@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:wenia_assignment/core/firebase_api/registet_user_firebase_auth.dart';
+import 'package:wenia_assignment/core/utils/utils.dart';
 
 class AuthController extends GetxController {
   TextEditingController loginEmailContoller = TextEditingController();
@@ -72,5 +75,19 @@ class AuthController extends GetxController {
       return 'Required field';
     }
     return null;
+  }
+
+  signUpActions() async {
+    User? user;
+    await excecuteProcess(Get.context!, () async {
+      user = await RegisterUserFirebaseAuth.call(
+          email: signUpEmailController.text,
+          pass: signUpPasswordController.text);
+    });
+    if (user != null) {
+      print('registro exitoso');
+    } else {
+      print('algo paso');
+    }
   }
 }

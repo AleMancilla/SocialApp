@@ -114,6 +114,7 @@ class _SignupFormSectionState extends State<SignupFormSection> {
               ElevatedButton(
                 onPressed: () {
                   // Implementar la lógica de registro aquí
+                  controller.signUpActions();
                 },
                 child: Text('Sign Up'),
               ),
