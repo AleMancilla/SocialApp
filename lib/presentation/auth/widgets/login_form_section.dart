@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
+import 'package:wenia_assignment/core/utils/custom_navigator.dart';
 import 'package:wenia_assignment/presentation/auth/controller/auth_controller.dart';
+import 'package:wenia_assignment/presentation/auth/forgot_password_screen.dart';
 import 'package:wenia_assignment/presentation/widgets/custom_text_file.dart';
 
 class LoginFormSection extends StatefulWidget {
@@ -60,7 +62,7 @@ class _LoginFormSectionState extends State<LoginFormSection> {
                 },
                 child: Text('Login'),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 5),
               TextButton(
                 onPressed: () {
                   widget._pageController.animateToPage(1,
@@ -68,6 +70,16 @@ class _LoginFormSectionState extends State<LoginFormSection> {
                       curve: Curves.easeInOut);
                 },
                 child: Text('Don\'t have an account? Sign Up'),
+              ),
+              SizedBox(height: 10),
+              TextButton(
+                onPressed: () {
+                  CustomNavigator.push(context, ForgotPasswordScreen());
+                },
+                child: Text(
+                  'Forgot pasword?',
+                  textAlign: TextAlign.right,
+                ),
               ),
             ],
           ),
