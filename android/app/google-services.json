@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "862476647699",
+    "project_id": "assignmentwenia",
+    "storage_bucket": "assignmentwenia.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:862476647699:android:33e1ec662c4f6817642ee6",
+        "android_client_info": {
+          "package_name": "com.alecodeando.wenia_assignm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkgYYdEj1Nmy4muEl_9nKEobnjt9_wVgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:862476647699:android:908864c9cf914035642ee6",
+        "android_client_info": {
+          "package_name": "com.alecodeando.weniatest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkgYYdEj1Nmy4muEl_9nKEobnjt9_wVgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

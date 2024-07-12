@@ -1,4 +1,4 @@
-package com.alecodeando.wenia_assignment
+package com.alecodeando.weniatest
 
 import io.flutter.embedding.android.FlutterActivity
 
