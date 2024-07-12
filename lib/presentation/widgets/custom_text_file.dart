@@ -84,7 +84,7 @@ class _CustomTextFileState extends State<CustomTextFile> {
     if (widget.isCalendar) {
       return Icon(Icons.calendar_today);
     }
-    if (widget.isCalendar) {
+    if (widget.isSecret) {
       return GestureDetector(
         onTap: () {
           setState(() {

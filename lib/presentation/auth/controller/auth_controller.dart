@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:wenia_assignment/core/firebase_api/login_user_firebase_auth.dart';
 import 'package:wenia_assignment/core/firebase_api/registet_user_firebase_auth.dart';
 import 'package:wenia_assignment/core/utils/utils.dart';
 
 class AuthController extends GetxController {
-  TextEditingController loginEmailContoller = TextEditingController();
-  TextEditingController loginPassContoller = TextEditingController();
+  TextEditingController loginEmailController = TextEditingController();
+  TextEditingController loginPassController = TextEditingController();
   TextEditingController signUpEmailController = TextEditingController();
   TextEditingController signUpPasswordController = TextEditingController();
   TextEditingController signUpConfirmPasswordController =
@@ -86,6 +87,19 @@ class AuthController extends GetxController {
     });
     if (user != null) {
       print('registro exitoso');
+    } else {
+      print('algo paso');
+    }
+  }
+
+  loginActions() async {
+    User? user;
+    await excecuteProcess(Get.context!, () async {
+      user = await LoginUserFirebaseAuth.call(
+          email: loginEmailController.text, pass: loginPassController.text);
+    });
+    if (user != null) {
+      print('login exitoso');
     } else {
       print('algo paso');
     }

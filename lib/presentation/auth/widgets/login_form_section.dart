@@ -36,7 +36,7 @@ class _LoginFormSectionState extends State<LoginFormSection> {
             children: [
               CustomTextFile(
                 labelText: 'Email',
-                controller: controller.loginEmailContoller,
+                controller: controller.loginEmailController,
                 validation: controller.loginEmailValidation,
                 onChanged: (value) {
                   controller.loginEmailValidation =
@@ -47,13 +47,14 @@ class _LoginFormSectionState extends State<LoginFormSection> {
               CustomTextFile(
                 labelText: 'Password',
                 isSecret: true,
-                controller: controller.loginPassContoller,
+                controller: controller.loginPassController,
                 validation: controller.loginPassValidation,
               ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   // Implementar la lógica de inicio de sesión aquí
+                  controller.loginActions();
                 },
                 child: Text('Login'),
               ),
