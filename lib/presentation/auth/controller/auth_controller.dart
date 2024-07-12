@@ -3,9 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:wenia_assignment/core/firebase_api/login_user_firebase_auth.dart';
-import 'package:wenia_assignment/core/firebase_api/registet_user_firebase_auth.dart';
+import 'package:wenia_assignment/core/firebase_api/auth/login_user_firebase_auth.dart';
+import 'package:wenia_assignment/core/firebase_api/auth/registet_user_firebase_auth.dart';
+import 'package:wenia_assignment/core/firebase_api/firestore/fetch_user_firestore.dart';
+import 'package:wenia_assignment/core/firebase_api/firestore/save_user_firestore.dart';
+import 'package:wenia_assignment/core/utils/custom_navigator.dart';
 import 'package:wenia_assignment/core/utils/utils.dart';
+import 'package:wenia_assignment/data/datasource/models/user_model.dart';
+import 'package:wenia_assignment/data/datasource/models/user_to_register_model.dart';
+import 'package:wenia_assignment/presentation/home/home_screen.dart';
 
 class AuthController extends GetxController {
   TextEditingController loginEmailController = TextEditingController();
@@ -79,16 +85,29 @@ class AuthController extends GetxController {
   }
 
   signUpActions() async {
-    User? user;
+    UserModel? userModel;
     await excecuteProcess(Get.context!, () async {
-      user = await RegisterUserFirebaseAuth.call(
+      User? user = await RegisterUserFirebaseAuth.call(
           email: signUpEmailController.text,
           pass: signUpPasswordController.text);
+      if (user != null) {
+        UserToRegisterModel userToRegister = UserToRegisterModel(
+          user: user!,
+          name: signUpNameController.text,
+          email: signUpEmailController.text,
+          dateofBirth: signUpDateofBirthController.text,
+          id: signUpIDController.text,
+        );
+        bool completeSaveData = await SaveUserFirestore.call(userToRegister);
+        if (completeSaveData) {
+          userModel = await FetchUserFirestore.call(user.uid);
+        }
+      }
     });
-    if (user != null) {
-      print('registro exitoso');
+    if (userModel != null) {
+      CustomNavigator.pushReplacement(Get.context!, HomeScreen());
     } else {
-      print('algo paso');
+      showErrorMsgSnackBar('Please verify and try again');
     }
   }
 
@@ -99,6 +118,7 @@ class AuthController extends GetxController {
           email: loginEmailController.text, pass: loginPassController.text);
     });
     if (user != null) {
+      print(user);
       print('login exitoso');
     } else {
       print('algo paso');
