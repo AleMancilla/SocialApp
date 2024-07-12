@@ -42,6 +42,7 @@ class _SignupFormSectionState extends State<SignupFormSection> {
                       controller.validateEmail(value);
                   setState(() {});
                 },
+                keyboardType: TextInputType.emailAddress,
               ),
               CustomTextFile(
                 labelText: 'Password',
@@ -53,6 +54,7 @@ class _SignupFormSectionState extends State<SignupFormSection> {
                       controller.validatePassword(value);
                   setState(() {});
                 },
+                keyboardType: TextInputType.visiblePassword,
               ),
               CustomTextFile(
                 labelText: 'Confirm Password',
@@ -64,6 +66,7 @@ class _SignupFormSectionState extends State<SignupFormSection> {
                       controller.validateConfirmPassword(value);
                   setState(() {});
                 },
+                keyboardType: TextInputType.visiblePassword,
               ),
               CustomTextFile(
                 labelText: 'Name',
@@ -74,6 +77,7 @@ class _SignupFormSectionState extends State<SignupFormSection> {
                       controller.validateEmptyController(value);
                   setState(() {});
                 },
+                keyboardType: TextInputType.name,
               ),
               CustomTextFile(
                 labelText: 'ID',
@@ -84,6 +88,7 @@ class _SignupFormSectionState extends State<SignupFormSection> {
                       controller.validateEmptyController(value);
                   setState(() {});
                 },
+                keyboardType: TextInputType.number,
               ),
               CustomTextFile(
                 labelText: 'Date of Birth',

@@ -8,6 +8,7 @@ import 'package:wenia_assignment/core/firebase_api/auth/registet_user_firebase_a
 import 'package:wenia_assignment/core/firebase_api/firestore/fetch_user_firestore.dart';
 import 'package:wenia_assignment/core/firebase_api/firestore/save_user_firestore.dart';
 import 'package:wenia_assignment/core/utils/custom_navigator.dart';
+import 'package:wenia_assignment/core/utils/user_preferens.dart';
 import 'package:wenia_assignment/core/utils/utils.dart';
 import 'package:wenia_assignment/data/datasource/models/user_model.dart';
 import 'package:wenia_assignment/data/datasource/models/user_to_register_model.dart';
@@ -32,6 +33,8 @@ class AuthController extends GetxController {
   String? signUpNameValidation;
   String? signUpIDValidation;
   String? signUpDateofBirthValidation;
+
+  final prefs = UserPreferences();
 
   RxBool isAdult = false.obs;
   String? validateEmail(String? value) {
@@ -85,6 +88,23 @@ class AuthController extends GetxController {
   }
 
   signUpActions() async {
+    if (!(signUpEmailValidation == null &&
+        signUpEmailController.text.isNotEmpty &&
+        signUpPasswordValidation == null &&
+        signUpPasswordController.text.isNotEmpty &&
+        signUpConfirmPasswordValidation == null &&
+        signUpConfirmPasswordController.text.isNotEmpty &&
+        signUpNameValidation == null &&
+        signUpNameController.text.isNotEmpty &&
+        signUpIDValidation == null &&
+        signUpIDController.text.isNotEmpty &&
+        signUpDateofBirthValidation == null &&
+        signUpDateofBirthController.text.isNotEmpty &&
+        isAdult.value)) {
+      showErrorMsgSnackBar(
+          'Please complete the form or verify that the entered data is correct.');
+      return;
+    }
     UserModel? userModel;
     await excecuteProcess(Get.context!, () async {
       User? user = await RegisterUserFirebaseAuth.call(
@@ -101,6 +121,9 @@ class AuthController extends GetxController {
         bool completeSaveData = await SaveUserFirestore.call(userToRegister);
         if (completeSaveData) {
           userModel = await FetchUserFirestore.call(user.uid);
+          if (userModel != null) {
+            prefs.saveUserData(userModel);
+          }
         }
       }
     });
@@ -112,16 +135,29 @@ class AuthController extends GetxController {
   }
 
   loginActions() async {
-    User? user;
+    if (!(loginEmailValidation == null &&
+        loginEmailController.text.isNotEmpty &&
+        loginPassValidation == null &&
+        loginPassController.text.isNotEmpty)) {
+      showErrorMsgSnackBar(
+          'Please complete the form or verify that the entered data is correct.');
+      return;
+    }
+    UserModel? userModel;
     await excecuteProcess(Get.context!, () async {
-      user = await LoginUserFirebaseAuth.call(
+      User? user = await LoginUserFirebaseAuth.call(
           email: loginEmailController.text, pass: loginPassController.text);
+      if (user != null) {
+        userModel = await FetchUserFirestore.call(user!.uid);
+        if (userModel != null) {
+          prefs.saveUserData(userModel);
+        }
+      }
     });
-    if (user != null) {
-      print(user);
-      print('login exitoso');
+    if (userModel != null) {
+      CustomNavigator.pushReplacement(Get.context!, HomeScreen());
     } else {
-      print('algo paso');
+      showErrorMsgSnackBar('Please verify and try again');
     }
   }
 }

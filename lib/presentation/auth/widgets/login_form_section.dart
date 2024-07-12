@@ -43,12 +43,14 @@ class _LoginFormSectionState extends State<LoginFormSection> {
                       controller.validateEmail(value);
                   setState(() {});
                 },
+                keyboardType: TextInputType.emailAddress,
               ),
               CustomTextFile(
                 labelText: 'Password',
                 isSecret: true,
                 controller: controller.loginPassController,
                 validation: controller.loginPassValidation,
+                keyboardType: TextInputType.visiblePassword,
               ),
               SizedBox(height: 20),
               ElevatedButton(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wenia_assignment/presentation/home/home_screen.dart';
 import '/presentation/auth/auth_home_screen.dart';
 import '/core/theme/custom_colors.dart';
 import '/core/utils/custom_navigator.dart';
@@ -31,18 +32,12 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _loadDataAndNavigate() async {
     await Future.delayed(Duration(seconds: 5)); // Simula carga de datos
-    // CustomNavigator.pushReplacement(context, InfiniteScreen());
 
-    // print('prefs.userLogued ======> ${prefs.userLogued}');
-    // if (!(prefs.userLogued == null || prefs.userLogued == false)) {
-    //   if (!(prefs.userCurrentRol == null || prefs.userCurrentRol == 'null')) {
-    //     CustomNavigator.pushReplacement(context, InfiniteScreen());
-    //   } else {
-    //     CustomNavigator.pushReplacement(context, CompleteInformationScreen());
-    //   }
-    // } else {
-    CustomNavigator.pushReplacement(context, AuthHomeScreen());
-    // }
+    if (!(prefs.userid == null || prefs.userid == '')) {
+      CustomNavigator.pushReplacement(context, HomeScreen());
+    } else {
+      CustomNavigator.pushReplacement(context, AuthHomeScreen());
+    }
   }
 
   @override
