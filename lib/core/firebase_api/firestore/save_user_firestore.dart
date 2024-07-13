@@ -14,18 +14,14 @@ class SaveUserFirestore {
         'id': user.id,
         'dateofBirth': user.dateofBirth,
       });
-      print("Datos del usuario guardados correctamente.");
       return true;
     } on FirebaseException catch (e) {
       // Manejo de errores específicos de Firebase
-      print("Error de Firebase: ${e.message}");
-      throw Exception(
-          "Error al guardar los datos del usuario en Firestore: ${e.message}");
+      throw Exception("Error saving user data to Firestore: ${e.message}");
     } catch (e) {
       // Manejo de otros errores
-      print("Error desconocido: $e");
       throw Exception(
-          "Error desconocido al guardar los datos del usuario en Firestore");
+          "Unknown error occurred while saving user data to Firestore");
     }
   }
 }

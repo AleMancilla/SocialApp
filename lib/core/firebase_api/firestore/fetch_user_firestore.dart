@@ -5,7 +5,6 @@ class FetchUserFirestore {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   static Future<UserModel?> call(String uid) async {
-    print(' =========== > uid === $uid');
     try {
       DocumentSnapshot doc =
           await _firestore.collection('users').doc(uid).get();
@@ -14,13 +13,11 @@ class FetchUserFirestore {
       }
       return null;
     } on FirebaseException catch (e) {
-      print("Error de Firebase: ${e.message}");
       throw Exception(
-          "Error al recuperar los datos del usuario de Firestore: ${e.message}");
+          "Error retrieving user data from Firestore: ${e.message}");
     } catch (e) {
-      print("Error desconocido: $e");
       throw Exception(
-          "Error desconocido al recuperar los datos del usuario de Firestore");
+          "Unknown error occurred while retrieving user data from Firestore");
     }
   }
 }
