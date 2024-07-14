@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wenia_assignment/core/utils/custom_navigator.dart';
+import 'package:wenia_assignment/core/utils/user_preferens.dart';
+import 'package:wenia_assignment/presentation/auth/auth_home_screen.dart';
 import 'package:wenia_assignment/presentation/profile/controller/profile_controller.dart';
 import 'package:wenia_assignment/presentation/widgets/custom_text_file.dart';
 
@@ -7,6 +10,7 @@ class EditProfileScreen extends StatelessWidget {
   EditProfileScreen({super.key});
 
   ProfileController controller = Get.put(ProfileController());
+  final prefs = UserPreferences();
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +41,18 @@ class EditProfileScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: controller.updateProfile,
               child: Text('Save Changes'),
+            ),
+            SizedBox(
+              height: 200,
+            ),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  prefs.deleteUserData();
+                  CustomNavigator.pushReplacement(context, AuthHomeScreen());
+                },
+                child: Text('Logout'),
+              ),
             ),
           ],
         ),

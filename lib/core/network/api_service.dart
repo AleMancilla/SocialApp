@@ -4,9 +4,7 @@ import 'package:wenia_assignment/core/network/constants.dart';
 
 class ApiService {
   static Future<String> get({String? endpoint}) async {
-    print('------------');
     final response = await http.get(Uri.parse('$baseurl/$endpoint'));
-    print(response);
 
     return _handleResponse(response);
   }

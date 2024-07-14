@@ -120,6 +120,7 @@ class AuthController extends GetxController {
         );
         bool completeSaveData = await SaveUserFirestore.call(userToRegister);
         if (completeSaveData) {
+          print('======== 1');
           userModel = await FetchUserFirestore.call(user.uid);
           if (userModel != null) {
             prefs.saveUserData(userModel);

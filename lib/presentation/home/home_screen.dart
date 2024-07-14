@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wenia_assignment/core/theme/custom_colors.dart';
 import 'package:wenia_assignment/core/utils/custom_navigator.dart';
-import 'package:wenia_assignment/core/utils/user_preferens.dart';
-import 'package:wenia_assignment/presentation/auth/auth_home_screen.dart';
 import 'package:wenia_assignment/presentation/home/controller/home_controller.dart';
 import 'package:wenia_assignment/presentation/home/widgets/compare_prices_screen.dart';
 import 'package:wenia_assignment/presentation/home/widgets/cripto_info_screen.dart';
@@ -17,7 +16,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final prefs = UserPreferences();
   HomeController controller = Get.put(HomeController());
 
   int _currentIndex = 0;
@@ -40,23 +38,40 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // InkWell(
-            //   onTap: () {
-            //     prefs.deleteUserData();
-            //     CustomNavigator.pushReplacement(context, AuthHomeScreen());
-            //   },
-            //   child: Text('LogOut'),
-            // ),
-            // InkWell(
-            //   onTap: () {
-            //     CustomNavigator.push(context, EditProfileScreen());
-            //   },
-            //   child: Padding(
-            //     padding: const EdgeInsets.all(28.0),
-            //     child: Text('editProfile'),
-            //   ),
-            // ),
-
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Row(
+                children: [
+                  Image.asset(
+                    'assets/images/logo.png',
+                    width: 40,
+                    height: 40,
+                  ),
+                  Expanded(
+                      child: Center(
+                          child: Text(
+                    'WENIA',
+                    style: TextStyle(
+                      fontSize: 22,
+                      letterSpacing: 15,
+                    ),
+                  ))),
+                  InkWell(
+                    onTap: () {
+                      CustomNavigator.push(context, EditProfileScreen());
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: CustomColors.background3,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: EdgeInsets.all(10),
+                      child: Icon(Icons.person),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Expanded(child: _screens[_currentIndex]),
           ],
         ),

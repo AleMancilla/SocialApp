@@ -16,6 +16,17 @@ class CriptoInfoScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Obx(() => Column(
                 children: [
+                  TextField(
+                    onChanged: (value) {
+                      controller.searchQuery.value = value;
+                      controller.filterCoins();
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Search',
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                  ),
+                  SizedBox(height: 20),
                   Row(
                     children: [
                       Expanded(
@@ -36,9 +47,12 @@ class CriptoInfoScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  ...controller.listCoins.map((Coin coin) {
+                  ...controller.filteredCoins.map((Coin coin) {
                     return TupleCoin(coin);
                   }).toList(),
+                  // ...controller.listCoins.map((Coin coin) {
+                  //   return TupleCoin(coin);
+                  // }).toList(),
                 ],
               )),
         ),
@@ -53,12 +67,11 @@ class TupleCoin extends StatelessWidget {
     super.key,
   });
   Coin coin;
+  HomeController controller = Get.find();
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        print('------- ');
-      },
+      onTap: () {},
       child: Row(
         children: [
           Expanded(
@@ -110,6 +123,8 @@ class TupleCoin extends StatelessWidget {
               child: InkWell(
                 onTap: () {
                   print('favorite');
+                  // coin.favorite = !coin.favorite;
+                  controller.addFavoriteCoin(coin);
                 },
                 child: Ink(
                   padding: EdgeInsets.all(5),

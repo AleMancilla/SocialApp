@@ -5,6 +5,7 @@ class UserModel {
   final String email;
   final String name;
   final String id;
+  final List<String> favoriteCoinList;
   final DateTime dateOfBirth;
 
   UserModel({
@@ -13,6 +14,7 @@ class UserModel {
     required this.name,
     required this.id,
     required this.dateOfBirth,
+    this.favoriteCoinList = const [],
   });
 
   factory UserModel.fromFirestore(DocumentSnapshot doc) {
@@ -22,6 +24,7 @@ class UserModel {
       email: data['email'],
       name: data['name'],
       id: data['id'],
+      favoriteCoinList: List<String>.from(data['favoriteCoinList']),
       dateOfBirth: DateTime.parse(data['dateofBirth']),
     );
   }

@@ -27,12 +27,17 @@ class UserPreferences {
   set userdateOfBirth(String? data) =>
       _prefs.setString('userdateOfBirth', data ?? '');
   String? get userdateOfBirth => _prefs.getString('userdateOfBirth');
+  set userfavoriteCoinList(List<String>? data) =>
+      _prefs.setStringList('userfavoriteCoinList', data ?? []);
+  List<String>? get userfavoriteCoinList =>
+      _prefs.getStringList('userfavoriteCoinList');
 
   void saveUserData(UserModel? user) {
     useruid = user?.uid;
     useremail = user?.email;
     username = user?.name;
     userid = user?.id;
+    userfavoriteCoinList = user?.favoriteCoinList;
     userdateOfBirth = user?.dateOfBirth.toString();
   }
 
@@ -42,5 +47,6 @@ class UserPreferences {
     _prefs.remove('username');
     _prefs.remove('userid');
     _prefs.remove('userdateOfBirth');
+    _prefs.remove('userfavoriteCoinList');
   }
 }
