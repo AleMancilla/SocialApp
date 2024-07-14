@@ -11,6 +11,9 @@ class HomeController extends GetxController {
   var searchQuery = ''.obs;
   final prefs = UserPreferences();
 
+  var selectedLeftCoin = Coin().obs;
+  var selectedRightCoin = Coin().obs;
+
   @override
   void onInit() async {
     super.onInit();

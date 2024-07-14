@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:wenia_assignment/core/firebase_api/auth/login_user_firebase_auth.dart';
 import 'package:wenia_assignment/core/firebase_api/auth/registet_user_firebase_auth.dart';
 import 'package:wenia_assignment/core/firebase_api/firestore/fetch_user_firestore.dart';
@@ -112,7 +110,7 @@ class AuthController extends GetxController {
           pass: signUpPasswordController.text);
       if (user != null) {
         UserToRegisterModel userToRegister = UserToRegisterModel(
-          user: user!,
+          user: user,
           name: signUpNameController.text,
           email: signUpEmailController.text,
           dateofBirth: signUpDateofBirthController.text,
@@ -120,7 +118,6 @@ class AuthController extends GetxController {
         );
         bool completeSaveData = await SaveUserFirestore.call(userToRegister);
         if (completeSaveData) {
-          print('======== 1');
           userModel = await FetchUserFirestore.call(user.uid);
           if (userModel != null) {
             prefs.saveUserData(userModel);
@@ -149,7 +146,7 @@ class AuthController extends GetxController {
       User? user = await LoginUserFirebaseAuth.call(
           email: loginEmailController.text, pass: loginPassController.text);
       if (user != null) {
-        userModel = await FetchUserFirestore.call(user!.uid);
+        userModel = await FetchUserFirestore.call(user.uid);
         if (userModel != null) {
           prefs.saveUserData(userModel);
         }

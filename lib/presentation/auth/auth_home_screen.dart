@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/route_manager.dart';
 import 'package:wenia_assignment/core/theme/custom_colors.dart';
 import 'package:wenia_assignment/presentation/auth/controller/auth_controller.dart';
 import 'package:wenia_assignment/presentation/auth/widgets/login_form_section.dart';
 import 'package:wenia_assignment/presentation/auth/widgets/signup_form_section.dart';
-import 'package:wenia_assignment/presentation/widgets/custom_text_file.dart';
 
 class AuthHomeScreen extends StatefulWidget {
-  AuthHomeScreen({super.key});
+  const AuthHomeScreen({super.key});
 
   @override
   State<AuthHomeScreen> createState() => _AuthHomeScreenState();
@@ -27,12 +25,12 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> {
 
   void _onLoginTapped() {
     _pageController.animateToPage(0,
-        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   void _onSignupTapped() {
     _pageController.animateToPage(1,
-        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   @override
@@ -43,7 +41,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> {
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(vertical: 40),
+              padding: const EdgeInsets.symmetric(vertical: 40),
               alignment: Alignment.center,
               width: sizeScreen.width / 2,
               height: sizeScreen.width / 2,
@@ -63,14 +61,14 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   GestureDetector(
                     onTap: _onLoginTapped,
                     child: AnimatedDefaultTextStyle(
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       style: TextStyle(
                         fontSize: _selectedPage == 0 ? 24 : 20,
                         fontWeight: _selectedPage == 0
@@ -80,7 +78,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> {
                             ? CustomColors.background3
                             : CustomColors.background1,
                       ),
-                      child: Text(
+                      child: const Text(
                         'LOGIN',
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold),
@@ -88,11 +86,11 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   GestureDetector(
                     onTap: _onSignupTapped,
                     child: AnimatedDefaultTextStyle(
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       style: TextStyle(
                         fontSize: _selectedPage == 1 ? 24 : 20,
                         fontWeight: _selectedPage == 1
@@ -102,7 +100,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> {
                             ? CustomColors.background3
                             : CustomColors.background1,
                       ),
-                      child: Text(
+                      child: const Text(
                         'SIGNUP',
                         style: TextStyle(fontSize: 24),
                         textAlign: TextAlign.center,
