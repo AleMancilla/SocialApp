@@ -1,6 +1,12 @@
 
 # Crypto App
 
+Video demostrativo de la aplicacion
+https://drive.google.com/file/d/1luwygRxefGY0kjjTQA0wBvh6ESrJeM6M/view?usp=sharing
+
+App instalable (android)
+https://drive.google.com/file/d/1lBacVlQwVqYeBYiwAuBqNtcVY3S_BlND/view?usp=sharing
+
 ![Logo](assets/icons/iconoApp.png)
 
 prueba tecnica
