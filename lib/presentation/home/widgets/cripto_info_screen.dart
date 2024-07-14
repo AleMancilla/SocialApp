@@ -30,16 +30,40 @@ class CriptoInfoScreen extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        flex: 7,
-                        child: Text('Name'),
-                      ),
-                      Expanded(
-                        flex: 4,
-                        child: Text('Price'),
+                        flex: 5,
+                        child: GestureDetector(
+                          onTap: () => controller.sortByName(),
+                          child: Row(
+                            children: [
+                              Text('Name'),
+                              Icon(Icons.sort),
+                            ],
+                          ),
+                        ),
                       ),
                       Expanded(
                         flex: 3,
-                        child: Text('% 24h'),
+                        child: GestureDetector(
+                          onTap: () => controller.sortByPrice(),
+                          child: Row(
+                            children: [
+                              Text('Price'),
+                              Icon(Icons.sort),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: GestureDetector(
+                          onTap: () => controller.sortByChangePercent24Hr(),
+                          child: Row(
+                            children: [
+                              Text('% 24h'),
+                              Icon(Icons.sort),
+                            ],
+                          ),
+                        ),
                       ),
                       Expanded(
                         flex: 1,

@@ -72,4 +72,55 @@ class HomeController extends GetxController {
     filteredCoins.refresh();
     listCoins.refresh();
   }
+
+  SortType sortType = SortType.none;
+
+  void sortByName() {
+    if (sortType == SortType.byNameDec) {
+      filteredCoins.sort((b, a) => a.symbol!.compareTo(b.symbol!));
+      filteredCoins.refresh();
+      sortType = SortType.byNameAsc;
+      return;
+    }
+    filteredCoins.sort((a, b) => a.symbol!.compareTo(b.symbol!));
+    filteredCoins.refresh();
+    sortType = SortType.byNameDec;
+  }
+
+  void sortByPrice() {
+    if (sortType == SortType.byPriceDec) {
+      filteredCoins.sort((b, a) => a.priceUsd!.compareTo(b.priceUsd!));
+      filteredCoins.refresh();
+      sortType = SortType.byPriceAsc;
+      return;
+    }
+    filteredCoins.sort((a, b) => a.priceUsd!.compareTo(b.priceUsd!));
+    filteredCoins.refresh();
+    sortType = SortType.byPriceDec;
+  }
+
+  void sortByChangePercent24Hr() {
+    if (sortType == SortType.byChangePercent24HrDec) {
+      filteredCoins.sort((b, a) => (double.parse(a.changePercent24Hr ?? '0'))
+          .compareTo(double.parse(b.changePercent24Hr ?? '0')));
+      filteredCoins.refresh();
+      sortType = SortType.byChangePercent24HrAsc;
+      return;
+    }
+
+    filteredCoins.sort((a, b) => (double.parse(a.changePercent24Hr ?? '0'))
+        .compareTo(double.parse(b.changePercent24Hr ?? '0')));
+    filteredCoins.refresh();
+    sortType = SortType.byChangePercent24HrDec;
+  }
+}
+
+enum SortType {
+  none,
+  byNameAsc,
+  byNameDec,
+  byPriceAsc,
+  byPriceDec,
+  byChangePercent24HrAsc,
+  byChangePercent24HrDec
 }
