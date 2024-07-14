@@ -16,45 +16,47 @@ class EditProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Editar Perfil'),
+        title: Text('Edit Profile'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomTextFile(
-              controller: controller.nameController,
-              labelText: 'Name',
-            ),
-            CustomTextFile(
-              controller: controller.idController,
-              labelText: 'ID',
-            ),
-            SizedBox(height: 16),
-            CustomTextFile(
-              controller: controller.dateOfBirthController,
-              labelText: 'Date of Birth',
-              isCalendar: true,
-            ),
-            SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: controller.updateProfile,
-              child: Text('Save Changes'),
-            ),
-            SizedBox(
-              height: 200,
-            ),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  prefs.deleteUserData();
-                  CustomNavigator.pushReplacement(context, AuthHomeScreen());
-                },
-                child: Text('Logout'),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomTextFile(
+                controller: controller.nameController,
+                labelText: 'Name',
               ),
-            ),
-          ],
+              CustomTextFile(
+                controller: controller.idController,
+                labelText: 'ID',
+              ),
+              SizedBox(height: 16),
+              CustomTextFile(
+                controller: controller.dateOfBirthController,
+                labelText: 'Date of Birth',
+                isCalendar: true,
+              ),
+              SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: controller.updateProfile,
+                child: Text('Save Changes'),
+              ),
+              SizedBox(
+                height: 200,
+              ),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    prefs.deleteUserData();
+                    CustomNavigator.pushReplacement(context, AuthHomeScreen());
+                  },
+                  child: Text('Logout'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

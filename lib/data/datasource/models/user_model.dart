@@ -24,7 +24,7 @@ class UserModel {
       email: data['email'],
       name: data['name'],
       id: data['id'],
-      favoriteCoinList: List<String>.from(data['favoriteCoinList']),
+      favoriteCoinList: List<String>.from(data['favoriteCoinList'] ?? []),
       dateOfBirth: DateTime.parse(data['dateofBirth']),
     );
   }

@@ -1,16 +1,34 @@
-# wenia_assignment
 
-A new Flutter project.
+# Crypto App
 
-## Getting Started
+![Logo](assets/icons/iconoApp.png)
 
-This project is a starting point for a Flutter application.
+prueba tecnica
 
-A few resources to get you started if this is your first Flutter project:
+Secciones de la app
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## LOGIN
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![login](assets/imagesToReadme/login.png)
+![signup](assets/imagesToReadme/signup.png)
+![validations](assets/imagesToReadme/validations.png)
+![errormanage](assets/imagesToReadme/errormanage.png)
+
+## App Home
+
+![home](assets/imagesToReadme/home.png)
+![filter](assets/imagesToReadme/filter.png)
+![search](assets/imagesToReadme/search.png)
+
+## favorite
+
+![favorites](assets/imagesToReadme/favorites.png)
+
+## Compare
+
+![compare](assets/imagesToReadme/compare.png)
+![compare2](assets/imagesToReadme/compare2.png)
+
+## VIDEO APP
+
+![VIDEO](assets/imagesToReadme/video.mp4)
