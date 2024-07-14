@@ -7,7 +7,7 @@ https://drive.google.com/file/d/1luwygRxefGY0kjjTQA0wBvh6ESrJeM6M/view?usp=shari
 App instalable (android)
 https://drive.google.com/file/d/1lBacVlQwVqYeBYiwAuBqNtcVY3S_BlND/view?usp=sharing
 
-![Logo](assets/icons/iconoApp.png)
+<img src="assets/icons/iconoApp.png" alt="iconoApp" width="200">
 
 prueba tecnica
 
@@ -15,26 +15,26 @@ Secciones de la app
 
 ## LOGIN
 
-![login](assets/imagesToReadme/login.png)
-![signup](assets/imagesToReadme/signup.png)
-![validations](assets/imagesToReadme/validations.png)
-![errormanage](assets/imagesToReadme/errormanage.png)
+<img src="assets/imagesToReadme/login.png" alt="login" width="200">
+<img src="assets/imagesToReadme/signup.png" alt="signup" width="200">
+<img src="assets/imagesToReadme/validations.png" alt="validations" width="200">
+<img src="assets/imagesToReadme/errormanage.png" alt="errormanage" width="200">
 
 ## App Home
 
-![home](assets/imagesToReadme/home.png)
-![filter](assets/imagesToReadme/filter.png)
-![search](assets/imagesToReadme/search.png)
+<img src="assets/imagesToReadme/home.png" alt="home" width="200">
+<img src="assets/imagesToReadme/filter.png" alt="filter" width="200">
+<img src="assets/imagesToReadme/search.png" alt="search" width="200">
 
 ## favorite
 
-![favorites](assets/imagesToReadme/favorites.png)
+<img src="assets/imagesToReadme/favorites.png" alt="favorites" width="200">
 
 ## Compare
 
-![compare](assets/imagesToReadme/compare.png)
-![compare2](assets/imagesToReadme/compare2.png)
+<img src="assets/imagesToReadme/compare.png" alt="compare" width="200">
+<img src="assets/imagesToReadme/compare2.png" alt="compare2" width="200">
 
 ## VIDEO APP
 
-![VIDEO](assets/imagesToReadme/video.mp4)
+<img src="assets/imagesToReadme/video.mp4" alt="video" width="200">
