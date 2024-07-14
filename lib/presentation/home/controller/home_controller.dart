@@ -4,6 +4,8 @@ import 'package:wenia_assignment/core/firebase_api/firestore/update_user_favorit
 import 'package:wenia_assignment/core/utils/user_preferens.dart';
 import 'package:wenia_assignment/core/utils/utils.dart';
 import 'package:wenia_assignment/data/datasource/models/coin_assets_model.dart';
+import 'dart:async';
+import 'package:get/get.dart';
 
 class HomeController extends GetxController {
   RxList<Coin> listCoins = <Coin>[].obs;
@@ -14,16 +16,32 @@ class HomeController extends GetxController {
   var selectedLeftCoin = Coin().obs;
   var selectedRightCoin = Coin().obs;
 
+  Timer? _timer;
+
   @override
   void onInit() async {
     super.onInit();
     await loadData();
     filteredCoins.value = listCoins; // Inicialmente, muestra todas las monedas
     refreshListFavorite();
+
+    // Llama a loadData cada 5 segundos
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) async {
+      await loadData();
+    });
+  }
+
+  @override
+  void onClose() {
+    // Cancelar el temporizador cuando el controlador se cierra
+    _timer?.cancel();
+    super.onClose();
   }
 
   Future loadData() async {
     listCoins.value = await GetListCoinApi.call() ?? [];
+    filterCoins(); // Filtrar las monedas después de actualizar la lista
+    refreshListFavorite(); // Refrescar la lista de favoritos después de actualizar la lista
   }
 
   void filterCoins() {
@@ -59,18 +77,10 @@ class HomeController extends GetxController {
   void refreshListFavorite() {
     List<String> listFavorite = prefs.userfavoriteCoinList ?? [];
     for (var coin in listCoins) {
-      if (listFavorite.contains(coin.id)) {
-        coin.favorite = true;
-      } else {
-        coin.favorite = false;
-      }
+      coin.favorite = listFavorite.contains(coin.id);
     }
     for (var coin in filteredCoins) {
-      if (listFavorite.contains(coin.id)) {
-        coin.favorite = true;
-      } else {
-        coin.favorite = false;
-      }
+      coin.favorite = listFavorite.contains(coin.id);
     }
     filteredCoins.refresh();
     listCoins.refresh();
@@ -104,14 +114,14 @@ class HomeController extends GetxController {
 
   void sortByChangePercent24Hr() {
     if (sortType == SortType.byChangePercent24HrDec) {
-      filteredCoins.sort((b, a) => (double.parse(a.changePercent24Hr ?? '0'))
+      filteredCoins.sort((b, a) => double.parse(a.changePercent24Hr ?? '0')
           .compareTo(double.parse(b.changePercent24Hr ?? '0')));
       filteredCoins.refresh();
       sortType = SortType.byChangePercent24HrAsc;
       return;
     }
 
-    filteredCoins.sort((a, b) => (double.parse(a.changePercent24Hr ?? '0'))
+    filteredCoins.sort((a, b) => double.parse(a.changePercent24Hr ?? '0')
         .compareTo(double.parse(b.changePercent24Hr ?? '0')));
     filteredCoins.refresh();
     sortType = SortType.byChangePercent24HrDec;
