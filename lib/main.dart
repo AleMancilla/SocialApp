@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Assignment Wenia',
       home: SplashScreen(),
-      theme: Themes().darkMode,
+      theme: Themes().ligthMode,
     );
   }
 }

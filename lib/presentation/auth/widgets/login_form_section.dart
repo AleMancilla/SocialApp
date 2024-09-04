@@ -29,7 +29,7 @@ class _LoginFormSectionState extends State<LoginFormSection> {
         left: 20,
         right: 20,
       ),
-      decoration: BoxDecoration(color: Colors.white10),
+      decoration: BoxDecoration(color: Colors.white38),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -37,7 +37,7 @@ class _LoginFormSectionState extends State<LoginFormSection> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               CustomTextFile(
-                labelText: 'Email',
+                labelText: 'Correo',
                 controller: controller.loginEmailController,
                 validation: controller.loginEmailValidation,
                 onChanged: (value) {
@@ -48,7 +48,7 @@ class _LoginFormSectionState extends State<LoginFormSection> {
                 keyboardType: TextInputType.emailAddress,
               ),
               CustomTextFile(
-                labelText: 'Password',
+                labelText: 'Contraseña',
                 isSecret: true,
                 controller: controller.loginPassController,
                 validation: controller.loginPassValidation,
@@ -60,7 +60,7 @@ class _LoginFormSectionState extends State<LoginFormSection> {
                   // Implementar la lógica de inicio de sesión aquí
                   controller.loginActions();
                 },
-                child: Text('Login'),
+                child: Text('Iniciar sesion'),
               ),
               SizedBox(height: 5),
               TextButton(
@@ -69,7 +69,7 @@ class _LoginFormSectionState extends State<LoginFormSection> {
                       duration: Duration(milliseconds: 300),
                       curve: Curves.easeInOut);
                 },
-                child: Text('Don\'t have an account? Sign Up'),
+                child: Text('No tienes una cuenta? Registrate'),
               ),
               SizedBox(height: 10),
               TextButton(
@@ -77,7 +77,7 @@ class _LoginFormSectionState extends State<LoginFormSection> {
                   CustomNavigator.push(context, ForgotPasswordScreen());
                 },
                 child: Text(
-                  'Forgot pasword?',
+                  'Olvidaste tu contraseña?',
                   textAlign: TextAlign.right,
                 ),
               ),

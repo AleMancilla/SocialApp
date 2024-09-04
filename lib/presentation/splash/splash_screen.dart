@@ -56,29 +56,37 @@ class _SplashScreenState extends State<SplashScreen>
           child: FadeTransition(
             opacity: _animation!,
             child: Center(
-              child: Container(
-                alignment: Alignment.center,
-                width: sizeScreen.width / 1.5,
-                height: sizeScreen.width / 1.5,
-                child: Hero(
-                  tag: 'imageSplash',
-                  // child: SvgPicture.asset(
-                  //   'assets/images/logo.png',
-                  //   width: sizeScreen.width / 1.5,
-                  //   height: sizeScreen.width / 1.5,
-                  //   fit: BoxFit.contain,
-                  // ),
-                  child: Image.asset(
-                    'assets/images/logo.png',
-                    width: sizeScreen.width / 1.2,
-                    height: sizeScreen.width / 1.2,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    width: sizeScreen.width / 1.5,
+                    height: sizeScreen.width / 1.5,
+                    child: Hero(
+                      tag: 'imageSplash',
+                      // child: SvgPicture.asset(
+                      //   'assets/images/logo.png',
+                      //   width: sizeScreen.width / 1.5,
+                      //   height: sizeScreen.width / 1.5,
+                      //   fit: BoxFit.contain,
+                      // ),
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        width: sizeScreen.width / 1.2,
+                        height: sizeScreen.width / 1.2,
+                      ),
+                    ),
                   ),
-                ),
+                  Text(
+                    'Social Stop',
+                    style: TextStyle(color: Colors.black, fontSize: 40),
+                  ),
+                ],
               ),
             ),
           ),
         ),
-        Text('Assignment Wenia'),
         SizedBox(height: 40)
       ],
     ));

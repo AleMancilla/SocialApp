@@ -37,33 +37,33 @@ class AuthController extends GetxController {
   RxBool isAdult = false.obs;
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter an email';
+      return 'Por favor ingrese un correo';
     }
     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
     if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email';
+      return 'Por favor ingrese un correo valido';
     }
     return null;
   }
 
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter a password';
+      return 'Por favor ingrese una contraseña';
     }
     if (value.length < 8) {
-      return 'Password must be at least 8 characters long';
+      return 'La contraseña debe tener al menos 8 caracteres.';
     }
     if (!RegExp(r'[A-Z]').hasMatch(value)) {
-      return 'Password must contain at least one uppercase letter';
+      return 'La contraseña debe contener al menos una letra mayúscula.';
     }
     if (!RegExp(r'[a-z]').hasMatch(value)) {
-      return 'Password must contain at least one lowercase letter';
+      return 'La contraseña debe contener al menos una letra minúscula.';
     }
     if (!RegExp(r'[0-9]').hasMatch(value)) {
-      return 'Password must contain at least one number';
+      return 'La contraseña debe contener al menos un número.';
     }
     if (!RegExp(r'[!@#\$&*~%^()\-_=+[\]{};:\",<.>/?\\|]').hasMatch(value)) {
-      return 'Password must contain at least one special character';
+      return 'La contraseña debe contener al menos un carácter especial.';
     }
     return null;
   }

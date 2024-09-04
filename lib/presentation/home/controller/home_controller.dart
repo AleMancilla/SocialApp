@@ -137,3 +137,5 @@ enum SortType {
   byChangePercent24HrAsc,
   byChangePercent24HrDec
 }
+
+

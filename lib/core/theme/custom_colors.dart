@@ -8,7 +8,8 @@ class CustomColors {
   static const Color background1 = Color(0xFF181818);
   static const Color background2 = Color(0xFF2B2B2C);
   static const Color background3 = Color(0xFFC3C4C4);
-  static const Color background4 = Color(0xFFFFFFFF);
+  static const Color background4 = Color(0xFF000000);
+  static const Color background5 = Color(0xFFBFCFB1);
 
   static const Color accentColor1 = Color(0xFFFF003D);
   static const Color accentColor2 = Color(0xFF237AF1);
