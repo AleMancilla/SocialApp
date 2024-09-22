@@ -23,9 +23,9 @@ class Themes {
   );
   final ligthMode = ThemeData.light().copyWith(
     // Define el color de fondo por defecto para la aplicación
-    scaffoldBackgroundColor: CustomColors.background5,
+    scaffoldBackgroundColor: CustomColors.background1,
     // Configura otros estilos de tema aquí
-    primaryColor: CustomColors.background1,
+    primaryColor: CustomColors.primaryColorText,
     // focusColor: Colors.red,
     // hintColor: Colors.red,
     // hoverColor: Colors.red,
