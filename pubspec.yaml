@@ -43,6 +43,8 @@ dependencies:
   firebase_auth: ^5.1.2
   cloud_firestore: ^5.1.0
   app_usage: ^3.0.1
+  system_alert_window: ^2.0.0
+  easy_permission_validator: 
 
 
 

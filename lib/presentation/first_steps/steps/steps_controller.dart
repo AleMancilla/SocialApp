@@ -1,13 +1,46 @@
 import 'package:app_usage/app_usage.dart';
+import 'package:easy_permission_validator/easy_permission_validator.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:system_alert_window/system_alert_window.dart';
 
 class StepsController extends GetxController {
   RxBool permisionUsageIsComplete = false.obs;
+  RxBool permisionSuperPosicionComplete = false.obs;
 
   // @override
   // void onInit() async {
   //   super.onInit();
   // }
+
+  askForSuperpositionPermision() async {
+    bool? status = await SystemAlertWindow.checkPermissions();
+    print(' ==== status == $status');
+    if (!(status ?? false)) {
+      SystemAlertWindow.requestPermissions();
+    }
+  }
+
+  permisionUseApp(BuildContext context) async {
+    final permissionValidator = EasyPermissionValidator(
+      context: context,
+      appName: 'Social Stop',
+      appNameColor: Colors.red,
+      cancelText: 'Cancelar',
+      enableLocationMessage:
+          'Debe habilitar los permisos necesarios para utilizar la App.',
+      goToSettingsText: 'Ir a Configuraciones',
+      permissionSettingsMessage:
+          'Necesita habilitar los permisos necesarios para que la aplicación funcione correctamente',
+    );
+    var result = await permissionValidator.systemAlertWindow();
+    if (result) {
+      // Do something;
+      permisionSuperPosicionComplete.value = result;
+      print(result);
+    }
+  }
 
   Future<void> askForPermision() async {
     // permisionUsageIsComplete.value = await verifyPermisions();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_one.dart';
+import 'package:wenia_assignment/presentation/first_steps/steps/step_two.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/steps_controller.dart';
 
 class FirstStepsScreen extends StatefulWidget {
@@ -32,7 +33,7 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
               },
               children: [
                 StepOne(),
-                Center(child: Text('Paso 2')),
+                StepTwo(),
                 Center(child: Text('Paso 3')),
               ],
             ),

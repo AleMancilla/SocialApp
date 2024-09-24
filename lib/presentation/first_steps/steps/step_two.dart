@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:wenia_assignment/presentation/common_widgets/custom_button.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/steps_controller.dart';
 
-class StepOne extends StatelessWidget {
-  StepOne({super.key});
+class StepTwo extends StatelessWidget {
+  StepTwo({super.key});
   StepsController controller = Get.find();
 
   @override
@@ -15,14 +15,14 @@ class StepOne extends StatelessWidget {
         () => Column(
           children: [
             Expanded(child: Container()),
-            Text('Permiso de uso requerido'),
+            Text('Permiso de superposicion'),
             SizedBox(height: 20),
             Text(
-              'Social Stop necesita permiso para el uso de la API para poder accerder a tu información de uso. Por favor selecciona dar permiso, luego selecciona Social Media de la lista de aplicaciones y habilita el permiso',
+              'Social Stop necesita permiso para funciones como el temporizador flotante, bloqueo automatico de las aplicacionesm, alertas de uso, etc',
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 20),
-            controller.permisionUsageIsComplete.value
+            controller.permisionSuperPosicionComplete.value
                 ? CustomButton(
                     text: 'Permiso otorgado',
                     color: Colors.green,
@@ -30,7 +30,8 @@ class StepOne extends StatelessWidget {
                 : CustomButton(
                     text: 'Dar permiso',
                     ontap: () async {
-                      await controller.askForPermision();
+                      // await controller.askForSuperpositionPermision();
+                      await controller.permisionUseApp(context);
                     },
                   ),
             SizedBox(height: 20),
