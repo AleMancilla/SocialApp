@@ -102,22 +102,22 @@ class _SignupFormSectionState extends State<SignupFormSection> {
                 },
                 isCalendar: true,
               ),
-              Obx(() {
-                return Row(
-                  children: <Widget>[
-                    Checkbox(
-                      value: controller.isAdult.value,
-                      onChanged: (value) {
-                        controller.isAdult.value = value!;
-                      },
-                    ),
-                    Text(
-                      "Declaro ser mayor de edad",
-                      style: TextStyle(color: Colors.green[900]),
-                    ),
-                  ],
-                );
-              }),
+              // Obx(() {
+              //   return Row(
+              //     children: <Widget>[
+              //       Checkbox(
+              //         value: controller.isAdult.value,
+              //         onChanged: (value) {
+              //           controller.isAdult.value = value!;
+              //         },
+              //       ),
+              //       Text(
+              //         "Declaro ser mayor de edad",
+              //         style: TextStyle(color: Colors.green[900]),
+              //       ),
+              //     ],
+              //   );
+              // }),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {

@@ -53,18 +53,18 @@ class AuthController extends GetxController {
     if (value.length < 8) {
       return 'La contraseña debe tener al menos 8 caracteres.';
     }
-    if (!RegExp(r'[A-Z]').hasMatch(value)) {
-      return 'La contraseña debe contener al menos una letra mayúscula.';
-    }
-    if (!RegExp(r'[a-z]').hasMatch(value)) {
-      return 'La contraseña debe contener al menos una letra minúscula.';
-    }
-    if (!RegExp(r'[0-9]').hasMatch(value)) {
-      return 'La contraseña debe contener al menos un número.';
-    }
-    if (!RegExp(r'[!@#\$&*~%^()\-_=+[\]{};:\",<.>/?\\|]').hasMatch(value)) {
-      return 'La contraseña debe contener al menos un carácter especial.';
-    }
+    // if (!RegExp(r'[A-Z]').hasMatch(value)) {
+    //   return 'La contraseña debe contener al menos una letra mayúscula.';
+    // }
+    // if (!RegExp(r'[a-z]').hasMatch(value)) {
+    //   return 'La contraseña debe contener al menos una letra minúscula.';
+    // }
+    // if (!RegExp(r'[0-9]').hasMatch(value)) {
+    //   return 'La contraseña debe contener al menos un número.';
+    // }
+    // if (!RegExp(r'[!@#\$&*~%^()\-_=+[\]{};:\",<.>/?\\|]').hasMatch(value)) {
+    //   return 'La contraseña debe contener al menos un carácter especial.';
+    // }
     return null;
   }
 
@@ -94,11 +94,9 @@ class AuthController extends GetxController {
         signUpConfirmPasswordController.text.isNotEmpty &&
         signUpNameValidation == null &&
         signUpNameController.text.isNotEmpty &&
-        signUpIDValidation == null &&
-        signUpIDController.text.isNotEmpty &&
         signUpDateofBirthValidation == null &&
-        signUpDateofBirthController.text.isNotEmpty &&
-        isAdult.value)) {
+        signUpDateofBirthController.text.isNotEmpty)) {
+      print(signUpDateofBirthController);
       showErrorMsgSnackBar(
           'Please complete the form or verify that the entered data is correct.');
       return;

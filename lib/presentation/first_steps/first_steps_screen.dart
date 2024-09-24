@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wenia_assignment/core/utils/custom_navigator.dart';
+import 'package:wenia_assignment/presentation/auth/auth_home_screen.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_one.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_two.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/steps_controller.dart';
@@ -34,7 +36,7 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
               children: [
                 StepOne(),
                 StepTwo(),
-                Center(child: Text('Paso 3')),
+                Center(child: Text('Bienvenido')),
               ],
             ),
           ),
@@ -77,6 +79,11 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
           ),
           GestureDetector(
             onTap: () {
+              print(' ---- _pageController.page ----- ${_pageController.page}');
+              if (_pageController.page == 2) {
+                CustomNavigator.push(context, AuthHomeScreen());
+                return;
+              }
               _pageController.nextPage(
                 duration: Duration(milliseconds: 300),
                 curve: Curves.easeInOut,

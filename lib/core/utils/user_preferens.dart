@@ -49,4 +49,13 @@ class UserPreferences {
     _prefs.remove('userdateOfBirth');
     _prefs.remove('userfavoriteCoinList');
   }
+
+  printUserData() {
+    print('useruid____ $useruid');
+    print('useremail____ $useremail');
+    print('username____ $username');
+    print('userid____ $userid');
+    print('userfavoriteCoinList____ $userfavoriteCoinList');
+    print('userdateOfBirth____ $userdateOfBirth');
+  }
 }

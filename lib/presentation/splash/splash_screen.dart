@@ -34,8 +34,12 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _loadDataAndNavigate() async {
     await Future.delayed(Duration(seconds: 5)); // Simula carga de datos
+    prefs.printUserData();
+    print(
+        ' ===== >>> ${prefs.useruid} -- ${prefs.useruid == null} -- ${prefs.useruid == ''}');
+    print(' ===== >>> ${!(prefs.useruid == null || prefs.useruid == '')}');
 
-    if (!(prefs.userid == null || prefs.userid == '')) {
+    if (!(prefs.useruid == null || prefs.useruid == '')) {
       CustomNavigator.pushReplacement(context, HomeScreen());
     } else {
       // CustomNavigator.pushReplacement(context, AuthHomeScreen());
