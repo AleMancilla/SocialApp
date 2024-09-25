@@ -48,7 +48,8 @@ dependencies:
   permission_handler: 
   device_apps: 
   usage_stats:
-
+  overlay_pop_up: ^1.0.3
+  package_info_plus:
 
 
 dev_dependencies:
