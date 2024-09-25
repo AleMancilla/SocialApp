@@ -44,11 +44,21 @@ class ListAppsController extends GetxController {
           await UsageStats.queryUsageStats(startDate, endDate);
 
       for (var stat in stats) {
+        print(
+            ' ==== stat.packageName = ${stat.packageName} -- ${stat.totalTimeInForeground}');
         if (stat.packageName != null && stat.totalTimeInForeground != null) {
-          appUsageStats[stat.packageName!] =
-              Duration(milliseconds: int.parse(stat.totalTimeInForeground!));
+          if (appUsageStats[stat.packageName!] == null) {
+            appUsageStats[stat.packageName!] =
+                Duration(milliseconds: int.parse(stat.totalTimeInForeground!));
+          } else {
+            appUsageStats[stat.packageName!] =
+                Duration(milliseconds: int.parse(stat.totalTimeInForeground!)) +
+                    (appUsageStats[stat.packageName!] as Duration);
+          }
         }
       }
+
+      print(stats);
 
       sortAppsByUsage();
     } catch (e) {

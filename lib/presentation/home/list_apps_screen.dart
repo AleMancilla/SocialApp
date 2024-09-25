@@ -1,13 +1,16 @@
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wenia_assignment/presentation/home/controller/home_controller.dart';
 import 'package:wenia_assignment/presentation/home/list_apps_controller.dart';
 
 class ListAppsScreen extends StatelessWidget {
   final ListAppsController controller = Get.put(ListAppsController());
+  final HomeController homecontroller = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
+    print(homecontroller.listAppUsageInfo);
     return Scaffold(
       appBar: AppBar(
         title: Text('Aplicaciones instaladas'),
@@ -39,7 +42,7 @@ class ListAppsScreen extends StatelessWidget {
                       : Icon(Icons.android),
                   title: Text(app.appName),
                   subtitle: Text(
-                    'Tiempo de uso: ${controller.formatDuration(usageTime ?? Duration())}',
+                    'Tiempo de uso: ${controller.formatDuration(usageTime ?? Duration())}\n${app.packageName}',
                   ),
                 ),
               );
