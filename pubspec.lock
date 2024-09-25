@@ -645,6 +645,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  usage_stats:
+    dependency: "direct main"
+    description:
+      name: usage_stats
+      sha256: "2fe32c851788ec4234f8a0b83dfcfa47d80a9a07dfb63095653692438ca7fc15"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   vector_graphics:
     dependency: transitive
     description:

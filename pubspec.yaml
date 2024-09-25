@@ -47,6 +47,7 @@ dependencies:
   easy_permission_validator: 
   permission_handler: 
   device_apps: 
+  usage_stats:
 
 
 
