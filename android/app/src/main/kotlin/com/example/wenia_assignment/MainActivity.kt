@@ -11,6 +11,8 @@ import java.io.ByteArrayOutputStream
 
 import android.content.Context
 import android.content.Intent
+import android.provider.Settings
+import android.net.Uri
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "com.alecodeando/native"
@@ -40,7 +42,8 @@ class MainActivity: FlutterActivity() {
 
         MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger, CHANNELTIMESERVICE).setMethodCallHandler { call, result ->
             if (call.method == "startService") {
-                startBackgroundTimeService(this)
+                // startBackgroundTimeService(this)
+                openAccessibilitySettings(this)
                 result.success("Service started")
             } else {
                 result.notImplemented()
@@ -66,6 +69,12 @@ class MainActivity: FlutterActivity() {
     fun startBackgroundTimeService(context: Context) {
         val intent = Intent(context, TimeService::class.java)
         context.startService(intent)
+    }
+
+    fun openAccessibilitySettings(context: Context) {
+        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
     
 }

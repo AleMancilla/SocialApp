@@ -1,0 +1,3 @@
+<resources>
+    <string name="accessibility_service_description">Este servicio monitorea las aplicaciones abiertas y cerradas.</string>
+</resources>
