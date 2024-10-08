@@ -4,6 +4,7 @@ import 'package:wenia_assignment/core/theme/custom_colors.dart';
 import 'package:wenia_assignment/core/utils/custom_navigator.dart';
 import 'package:wenia_assignment/presentation/home/controller/home_controller.dart';
 import 'package:wenia_assignment/presentation/home/list_apps_screen.dart';
+import 'package:wenia_assignment/presentation/home/native_comunication_screen.dart';
 import 'package:wenia_assignment/presentation/home/widgets/principal_overlay.dart';
 import 'package:wenia_assignment/presentation/profile/edit_profile_screen.dart';
 
@@ -21,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _screens = [
     ListAppsScreen(),
-    Container(),
+    NativeCommunicationScreen(),
     PrincipalOverlay(),
   ];
 
