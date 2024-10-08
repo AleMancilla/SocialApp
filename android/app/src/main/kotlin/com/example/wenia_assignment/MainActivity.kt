@@ -9,8 +9,13 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
 import java.io.ByteArrayOutputStream
 
+import android.content.Context
+import android.content.Intent
+
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "com.alecodeando/native"
+    private val CHANNELTIMESERVICE = "com.example.timeService"
+
 
     override fun onResume() {
         super.onResume()
@@ -31,6 +36,16 @@ class MainActivity: FlutterActivity() {
                 result.notImplemented()
             }
         }
+
+
+        MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger, CHANNELTIMESERVICE).setMethodCallHandler { call, result ->
+            if (call.method == "startService") {
+                startBackgroundTimeService(this)
+                result.success("Service started")
+            } else {
+                result.notImplemented()
+            }
+        }
     }
 
     // Método para enviar datos desde Kotlin a Flutter
@@ -44,6 +59,13 @@ class MainActivity: FlutterActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             sendToFlutter("Mensaje enviado desde Kotlin después de 5 segundos")
         }, 5000) // Enviar mensaje después de 5 segundos
+    }
+
+
+
+    fun startBackgroundTimeService(context: Context) {
+        val intent = Intent(context, TimeService::class.java)
+        context.startService(intent)
     }
     
 }

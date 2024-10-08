@@ -9,6 +9,7 @@ class NativeCommunicationScreen extends StatefulWidget {
 
 class _NativeCommunicationScreenState extends State<NativeCommunicationScreen> {
   static const platform = MethodChannel('com.alecodeando/native');
+  static const platformTime = MethodChannel('com.example.timeService');
   String _messageFromKotlin = "Esperando mensaje desde Kotlin...";
 
   @override
@@ -22,6 +23,17 @@ class _NativeCommunicationScreenState extends State<NativeCommunicationScreen> {
     try {
       String response =
           await platform.invokeMethod('sendToKotlin', "Hola desde Flutter");
+      print("Respuesta desde Kotlin: $response");
+    } catch (e) {
+      print("Error al enviar mensaje a Kotlin: ${e.toString()}");
+    }
+  }
+
+  // Método para enviar mensaje a Kotlin
+  Future<void> sendMessageToKotlinStartTime() async {
+    try {
+      String response =
+          await platformTime.invokeMethod('startService', "Hola desde Flutter");
       print("Respuesta desde Kotlin: $response");
     } catch (e) {
       print("Error al enviar mensaje a Kotlin: ${e.toString()}");
@@ -47,6 +59,9 @@ class _NativeCommunicationScreenState extends State<NativeCommunicationScreen> {
       appBar: AppBar(
         title: Text('Flutter - Kotlin Communication'),
       ),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        sendMessageToKotlinStartTime();
+      }),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

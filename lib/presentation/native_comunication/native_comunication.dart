@@ -24,4 +24,14 @@ class NativeCommunication {
       }
     });
   }
+
+  static const platformTime = MethodChannel('com.example.timeService');
+
+  static Future<void> startService() async {
+    try {
+      await platformTime.invokeMethod('startService');
+    } on PlatformException catch (e) {
+      print("Failed to start service: '${e.message}'");
+    }
+  }
 }
