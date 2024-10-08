@@ -15,7 +15,14 @@ class StepTwo extends StatelessWidget {
         () => Column(
           children: [
             Expanded(child: Container()),
-            Text('Permiso de superposicion'),
+            Text(
+              'Permiso de superposicion',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+                fontFamily: 'paradice',
+              ),
+            ),
             SizedBox(height: 20),
             Text(
               'Social Stop necesita permiso para funciones como el temporizador flotante, bloqueo automatico de las aplicacionesm, alertas de uso, etc',

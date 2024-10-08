@@ -15,7 +15,14 @@ class StepOne extends StatelessWidget {
         () => Column(
           children: [
             Expanded(child: Container()),
-            Text('Permiso de uso requerido'),
+            Text(
+              'Permiso de uso requerido',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+                fontFamily: 'paradice',
+              ),
+            ),
             SizedBox(height: 20),
             Text(
               'Social Stop necesita permiso para el uso de la API para poder accerder a tu información de uso. Por favor selecciona dar permiso, luego selecciona Social Media de la lista de aplicaciones y habilita el permiso',

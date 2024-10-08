@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wenia_assignment/core/utils/custom_navigator.dart';
 import 'package:wenia_assignment/presentation/auth/auth_home_screen.dart';
+import 'package:wenia_assignment/presentation/first_steps/steps/step_cero.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_one.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_two.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/steps_controller.dart';
@@ -15,7 +16,7 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
   final PageController _pageController = PageController();
   StepsController controller = Get.put(StepsController());
   int _currentStep = 0;
-  final int _totalSteps = 3;
+  final int _totalSteps = 4;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +35,7 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
                 });
               },
               children: [
+                StepCero(),
                 StepOne(),
                 StepTwo(),
                 Center(child: Text('Bienvenido')),

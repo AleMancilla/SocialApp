@@ -21,8 +21,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _screens = [
     ListAppsScreen(),
-    PrincipalOverlay(),
     Container(),
+    PrincipalOverlay(),
   ];
 
   void _onTabTapped(int index) {

@@ -74,7 +74,10 @@ flutter_icons:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  fonts:
+    - family: paradice
+      fonts:
+        - asset: assets/fonts/paradice.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
