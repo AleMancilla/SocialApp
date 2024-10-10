@@ -53,6 +53,17 @@ class _NativeCommunicationScreenState extends State<NativeCommunicationScreen> {
     });
   }
 
+  static const platformFloating =
+      MethodChannel('com.example.wenia_assignment/floating_widget');
+
+  Future<void> showFloatingWidget() async {
+    try {
+      await platformFloating.invokeMethod('showFloatingWidget');
+    } on PlatformException catch (e) {
+      print("Error: '${e.message}'.");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,6 +92,11 @@ class _NativeCommunicationScreenState extends State<NativeCommunicationScreen> {
             ElevatedButton(
               onPressed: sendMessageToKotlin,
               child: Text('Enviar mensaje a Kotlin'),
+            ),
+            SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: showFloatingWidget,
+              child: Text('showFloatingWidget'),
             ),
           ],
         ),
