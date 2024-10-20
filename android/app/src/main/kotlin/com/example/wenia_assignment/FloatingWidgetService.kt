@@ -10,15 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
-
 import android.graphics.PixelFormat
 import android.view.Gravity
-
 import android.view.MotionEvent
 
-
 class FloatingWidgetService : Service() {
-
 
     private lateinit var floatingView: View
     private lateinit var windowManager: WindowManager
@@ -30,9 +26,19 @@ class FloatingWidgetService : Service() {
     private var initialTouchY = 0f
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        intent?.let {
-            val usageTime = it.getStringExtra("usage_time")
-            usageTime?.let { time -> updateUsageTime(time) }
+        try {
+            intent?.let {
+                when (it.action) {
+                    "CLOSE_WIDGET" -> closeWidget() // Cerrar el widget flotante
+                    else -> {
+                        val usageTime = it.getStringExtra("usage_time")
+                        usageTime?.let { time -> updateUsageTime(time) }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("FloatingWidgetService", "Error en onStartCommand: ${e.message}")
+            e.printStackTrace()
         }
         return START_STICKY
     }
@@ -88,10 +94,22 @@ class FloatingWidgetService : Service() {
         usageTextView.text = usageTime
     }
 
+    private fun closeWidget() {
+        Log.d("FloatingWidgetService", "Cerrando widget flotante")
+        if (::floatingView.isInitialized) {
+            windowManager.removeView(floatingView)
+        }
+        stopSelf() // Detener el servicio
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         if (::floatingView.isInitialized) {
-            windowManager.removeView(floatingView)
+            try {
+                windowManager.removeView(floatingView)
+            } catch (e: Exception) {
+                Log.e("FloatingWidgetService", "Error al eliminar la vista: ${e.message}")
+            }
         }
     }
 

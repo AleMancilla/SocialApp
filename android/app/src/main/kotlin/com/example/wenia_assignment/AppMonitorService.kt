@@ -106,11 +106,12 @@ class AppMonitorService : Service() {
         appTimerRunnable?.let { handler.removeCallbacks(it) }
         val totalUsageTimeNow = getAppUsageTime(packageName) // Obtener tiempo acumulado desde el sistema
         Log.d("AppMonitorService", "App cerrada: $packageName - Tiempo total: ${formatTime(totalUsageTimeNow)}")
-        
-        // Notificar al widget flotante que se ha cerrado la aplicación
+
+        // Enviar señal para cerrar el widget flotante
         val intent = Intent(this@AppMonitorService, FloatingWidgetService::class.java)
-        intent.putExtra("close_widget", true) // Indica que se debe cerrar el widget
+        intent.action = "CLOSE_WIDGET" // Accion para cerrar el widget
         startService(intent)
+        
     }
 
     private fun getAppUsageTime(packageName: String): Int {
