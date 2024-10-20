@@ -20,6 +20,14 @@ class AppMonitorService : Service() {
     private var appTimerRunnable: Runnable? = null
     private var totalUsageTime = 0 // Tiempo de uso total en segundos
 
+    // Lista de paquetes permitidos
+    private val allowedPackages = listOf(
+        "com.whatsapp",       // WhatsApp
+        "com.facebook.katana", // Facebook
+        "com.instagram.android", // Instagram
+        // Agrega más paquetes según lo necesites
+    )
+
     override fun onCreate() {
         super.onCreate()
         usageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
@@ -59,10 +67,16 @@ class AppMonitorService : Service() {
                 return
             }
 
-            if (currentApp != lastAppPackage) {
+            if (allowedPackages.contains(currentApp)) {
+                if (currentApp != lastAppPackage) {
+                    lastAppPackage?.let { stopTracking(it) }
+                    startTracking(currentApp)
+                    lastAppPackage = currentApp
+                }
+            } else {
+                // Si el paquete no está permitido, detener el seguimiento
                 lastAppPackage?.let { stopTracking(it) }
-                startTracking(currentApp)
-                lastAppPackage = currentApp
+                lastAppPackage = null // Restablecer el paquete actual
             }
         }
     }
@@ -92,6 +106,11 @@ class AppMonitorService : Service() {
         appTimerRunnable?.let { handler.removeCallbacks(it) }
         val totalUsageTimeNow = getAppUsageTime(packageName) // Obtener tiempo acumulado desde el sistema
         Log.d("AppMonitorService", "App cerrada: $packageName - Tiempo total: ${formatTime(totalUsageTimeNow)}")
+        
+        // Notificar al widget flotante que se ha cerrado la aplicación
+        val intent = Intent(this@AppMonitorService, FloatingWidgetService::class.java)
+        intent.putExtra("close_widget", true) // Indica que se debe cerrar el widget
+        startService(intent)
     }
 
     private fun getAppUsageTime(packageName: String): Int {
