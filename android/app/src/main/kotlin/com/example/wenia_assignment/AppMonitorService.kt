@@ -66,26 +66,20 @@ class AppMonitorService : Service() {
         }
     }
 
-
     private fun startTimer(packageName: String, initialTime: Int) {
         var secondsCounter = initialTime
         Log.d("AppMonitorService", "App abierta: $packageName")
 
-        // Si la app en primer plano es el widget flotante, ignorarla
-        // if (packageName == "com.alecodeando.weniatest") {
-        //     return
-        // }
-
-        
         appTimerRunnable = object : Runnable {
             override fun run() {
                 secondsCounter++
                 appUsageTimes[packageName] = secondsCounter
-                Log.d("AppMonitorService", "App en uso: $packageName - Tiempo: $secondsCounter segundos")
+                val formattedTime = formatTime(secondsCounter)
+                Log.d("AppMonitorService", "App en uso: $packageName - Tiempo: $formattedTime")
 
                 // Enviar el tiempo de uso al servicio del widget flotante
                 val intent = Intent(this@AppMonitorService, FloatingWidgetService::class.java)
-                intent.putExtra("usage_time", "$secondsCounter segundos")
+                intent.putExtra("usage_time", formattedTime)
                 startService(intent)
 
                 handler.postDelayed(this, 1000) // Incrementa el contador cada segundo
@@ -94,11 +88,17 @@ class AppMonitorService : Service() {
         appTimerRunnable?.let { handler.post(it) }
     }
 
-
     private fun stopTimer(packageName: String) {
         appTimerRunnable?.let { handler.removeCallbacks(it) }
         val totalTime = appUsageTimes[packageName] ?: 0
-        Log.d("AppMonitorService", "App cerrada: $packageName - Tiempo total: $totalTime segundos")
+        Log.d("AppMonitorService", "App cerrada: $packageName - Tiempo total: ${formatTime(totalTime)}")
+    }
+
+    // Función para formatear el tiempo en MM:SS
+    private fun formatTime(seconds: Int): String {
+        val minutes = seconds / 60
+        val secs = seconds % 60
+        return String.format("%02d:%02d", minutes, secs)
     }
 
     override fun onDestroy() {
