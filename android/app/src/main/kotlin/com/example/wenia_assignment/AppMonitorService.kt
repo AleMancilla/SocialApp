@@ -42,41 +42,58 @@ class AppMonitorService : Service() {
         val usageEvents = usageStatsManager.queryEvents(startTime, endTime)
         var lastEvent: UsageEvents.Event? = null
 
-        // Recorre los eventos de uso
         while (usageEvents.hasNextEvent()) {
             val event = UsageEvents.Event()
             usageEvents.getNextEvent(event)
             if (event.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
-                lastEvent = event // Guarda el último evento de "move to foreground"
+                lastEvent = event
             }
         }
 
         lastEvent?.let {
             val currentApp = it.packageName
+
+            // Ignorar el widget flotante en el monitoreo
+            if (currentApp == "com.alecodeando.weniatest") {
+                return
+            }
+
             if (currentApp != lastAppPackage) {
-                // Si se cambia de app, detiene el contador de la anterior
                 lastAppPackage?.let { stopTimer(it) }
-                // Inicia el contador para la nueva app
                 startTimer(currentApp, appUsageTimes[currentApp] ?: 0)
                 lastAppPackage = currentApp
             }
         }
     }
 
+
     private fun startTimer(packageName: String, initialTime: Int) {
         var secondsCounter = initialTime
         Log.d("AppMonitorService", "App abierta: $packageName")
 
+        // Si la app en primer plano es el widget flotante, ignorarla
+        // if (packageName == "com.alecodeando.weniatest") {
+        //     return
+        // }
+
+        
         appTimerRunnable = object : Runnable {
             override fun run() {
                 secondsCounter++
                 appUsageTimes[packageName] = secondsCounter
                 Log.d("AppMonitorService", "App en uso: $packageName - Tiempo: $secondsCounter segundos")
+
+                // Enviar el tiempo de uso al servicio del widget flotante
+                val intent = Intent(this@AppMonitorService, FloatingWidgetService::class.java)
+                intent.putExtra("usage_time", "$secondsCounter segundos")
+                startService(intent)
+
                 handler.postDelayed(this, 1000) // Incrementa el contador cada segundo
             }
         }
         appTimerRunnable?.let { handler.post(it) }
     }
+
 
     private fun stopTimer(packageName: String) {
         appTimerRunnable?.let { handler.removeCallbacks(it) }

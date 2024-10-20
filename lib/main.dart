@@ -3,15 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
 import 'package:overlay_pop_up/overlay_pop_up.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:wenia_assignment/core/utils/user_preferens.dart';
 import 'package:wenia_assignment/presentation/splash/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'firebase_options.dart';
 
 import 'dart:async';
-import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

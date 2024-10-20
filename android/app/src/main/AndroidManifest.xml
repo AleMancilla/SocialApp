@@ -45,6 +45,9 @@
            android:name="com.requiemz.overlay_pop_up.OverlayService"
            android:exported="false"/>
     <service
+        android:name=".FloatingWidgetService"
+        android:permission="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <service
         android:name=".TimeService"
         android:enabled="true"
         android:exported="false" />

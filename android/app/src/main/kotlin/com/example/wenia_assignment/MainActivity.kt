@@ -14,7 +14,6 @@ import android.content.Intent
 import android.provider.Settings
 import android.net.Uri
 
-
 import android.app.Service
 import android.os.Build
 import android.os.IBinder
@@ -29,20 +28,21 @@ import io.flutter.embedding.engine.FlutterEngine
 import android.graphics.PixelFormat
 import android.view.Gravity
 
-
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "com.alecodeando/native"
     private val CHANNELTIMESERVICE = "com.example.timeService"
     private val CHANNELFLOATING = "com.example.wenia_assignment/floating_widget"
-
-
+    
+    // Definir la vista flotante
+    private lateinit var floatingView: View
+    private lateinit var params: WindowManager.LayoutParams
 
     override fun onResume() {
         super.onResume()
         startSendingMessagesToFlutter() // Iniciar envío de mensajes después de reanudar la actividad
     }
 
-    override fun configureFlutterEngine(flutterEngine: io.flutter.embedding.engine.FlutterEngine) {
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
@@ -57,8 +57,7 @@ class MainActivity: FlutterActivity() {
             }
         }
 
-
-        MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger, CHANNELTIMESERVICE).setMethodCallHandler { call, result ->
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNELTIMESERVICE).setMethodCallHandler { call, result ->
             if (call.method == "startService") {
                 // startBackgroundTimeService(this)
                 openAccessibilitySettings(this)
@@ -68,14 +67,13 @@ class MainActivity: FlutterActivity() {
             }
         }
 
-
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNELFLOATING).setMethodCallHandler {
-            call, result ->
-            if (call.method == "showFloatingWidget") {
-                showFloatingWidget()
-                result.success(null)
-            } else {
-                result.notImplemented()
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNELFLOATING).setMethodCallHandler { call, result ->
+            when (call.method) {
+                "showFloatingWidget" -> {
+                    showFloatingWidget() // Llama al método que inicia el widget flotante
+                    result.success(null)
+                }
+                else -> result.notImplemented()
             }
         }
     }
@@ -93,8 +91,6 @@ class MainActivity: FlutterActivity() {
         }, 5000) // Enviar mensaje después de 5 segundos
     }
 
-
-
     fun startBackgroundTimeService(context: Context) {
         val intent = Intent(context, TimeService::class.java)
         context.startService(intent)
@@ -107,29 +103,66 @@ class MainActivity: FlutterActivity() {
     }
     
     private fun showFloatingWidget() {
-        val layoutInflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val floatingView = layoutInflater.inflate(R.layout.floating_widget, null)
+        createFloatingView() // Inicializa la vista flotante
+        startCountDown(10) // Comienza el conteo de 10 segundos
+    }
 
-        // Create the parameters for the floating window
-        val params = WindowManager.LayoutParams(
+    private fun createFloatingView() {
+        floatingView = LayoutInflater.from(this).inflate(R.layout.floating_widget_layout, null)
+
+        // Configura parámetros de diseño para el widget flotante
+        params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT
         )
-
-        // Specify the position of the window
         params.gravity = Gravity.TOP or Gravity.LEFT
-        params.x = 0
-        params.y = 100
+        params.x = 0 // Coordenada x inicial
+        params.y = 100 // Coordenada y inicial
 
-        // Add the view to the window
         val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         windowManager.addView(floatingView, params)
 
-        // Set the text to display
-        val textView = floatingView.findViewById<TextView>(R.id.floating_text)
-        textView.text = "HOLA MUNDO"
+        // Asume que tienes un TextView en tu layout llamado "timeTextView"
+        // val timeTextView: TextView = floatingView.findViewById(R.id.timeTextView)
+        // timeTextView.text = "0 segundos" // Inicializar el texto
     }
+
+    // private fun updateUsageTime(time: String) {
+    //     val timeTextView: TextView = floatingView.findViewById(R.id.timeTextView)
+    //     timeTextView.text = time
+    // }
+    fun updateUsageTime(usageTime: String) {
+        val usageTextView = floatingView.findViewById<TextView>(R.id.usage_time_text_view) // Cambia esto si el ID es diferente
+        usageTextView.text = usageTime // Actualiza el texto del TextView con el tiempo de uso
+    }
+
+   private fun startCountDown(seconds: Int) {
+    var countdown = seconds
+    val handler = Handler(Looper.getMainLooper())
+
+    val runnable = object : Runnable {
+        override fun run() {
+            if (countdown >= 0) {
+                updateUsageTime("$countdown segundos")
+                countdown--
+                handler.postDelayed(this, 1000) // Decrementa el contador cada segundo
+            } else {
+                // Detiene el conteo y elimina el widget flotante
+                handler.removeCallbacks(this)
+                removeFloatingWidget() // Llama al método para eliminar el widget flotante
+            }
+        }
+    }
+    handler.post(runnable)
+}
+
+private fun removeFloatingWidget() {
+    // Elimina el widget flotante de la ventana
+    val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+    windowManager.removeView(floatingView)
+}
+
 }
