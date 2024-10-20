@@ -9,6 +9,7 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
+import java.util.Calendar
 
 class AppMonitorService : Service() {
 
@@ -16,8 +17,8 @@ class AppMonitorService : Service() {
     private var monitorRunnable: Runnable? = null
     private lateinit var usageStatsManager: UsageStatsManager
     private var lastAppPackage: String? = null
-    private var appUsageTimes = mutableMapOf<String, Int>()
     private var appTimerRunnable: Runnable? = null
+    private var totalUsageTime = 0 // Tiempo de uso total en segundos
 
     override fun onCreate() {
         super.onCreate()
@@ -59,22 +60,21 @@ class AppMonitorService : Service() {
             }
 
             if (currentApp != lastAppPackage) {
-                lastAppPackage?.let { stopTimer(it) }
-                startTimer(currentApp, appUsageTimes[currentApp] ?: 0)
+                lastAppPackage?.let { stopTracking(it) }
+                startTracking(currentApp)
                 lastAppPackage = currentApp
             }
         }
     }
 
-    private fun startTimer(packageName: String, initialTime: Int) {
-        var secondsCounter = initialTime
-        Log.d("AppMonitorService", "App abierta: $packageName")
+    private fun startTracking(packageName: String) {
+        totalUsageTime = getAppUsageTime(packageName) // Obtener tiempo total acumulado
+        Log.d("AppMonitorService", "App abierta: $packageName - Tiempo acumulado: ${formatTime(totalUsageTime)}")
 
         appTimerRunnable = object : Runnable {
             override fun run() {
-                secondsCounter++
-                appUsageTimes[packageName] = secondsCounter
-                val formattedTime = formatTime(secondsCounter)
+                totalUsageTime++
+                val formattedTime = formatTime(totalUsageTime)
                 Log.d("AppMonitorService", "App en uso: $packageName - Tiempo: $formattedTime")
 
                 // Enviar el tiempo de uso al servicio del widget flotante
@@ -88,17 +88,39 @@ class AppMonitorService : Service() {
         appTimerRunnable?.let { handler.post(it) }
     }
 
-    private fun stopTimer(packageName: String) {
+    private fun stopTracking(packageName: String) {
         appTimerRunnable?.let { handler.removeCallbacks(it) }
-        val totalTime = appUsageTimes[packageName] ?: 0
-        Log.d("AppMonitorService", "App cerrada: $packageName - Tiempo total: ${formatTime(totalTime)}")
+        val totalUsageTimeNow = getAppUsageTime(packageName) // Obtener tiempo acumulado desde el sistema
+        Log.d("AppMonitorService", "App cerrada: $packageName - Tiempo total: ${formatTime(totalUsageTimeNow)}")
     }
 
-    // Función para formatear el tiempo en MM:SS
+    private fun getAppUsageTime(packageName: String): Int {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+
+        val usageStatsList = usageStatsManager.queryUsageStats(
+            UsageStatsManager.INTERVAL_DAILY,
+            calendar.timeInMillis,
+            System.currentTimeMillis()
+        )
+
+        for (usageStats in usageStatsList) {
+            if (usageStats.packageName == packageName) {
+                return (usageStats.totalTimeInForeground / 1000).toInt() // Convertir de milisegundos a segundos
+            }
+        }
+
+        return 0 // Si no se encontró el paquete, retorna 0
+    }
+
+    // Función para formatear el tiempo en HH:MM:SS
     private fun formatTime(seconds: Int): String {
-        val minutes = seconds / 60
+        val hours = seconds / 3600
+        val minutes = (seconds % 3600) / 60
         val secs = seconds % 60
-        return String.format("%02d:%02d", minutes, secs)
+        return String.format("%02d:%02d:%02d", hours, minutes, secs)
     }
 
     override fun onDestroy() {
