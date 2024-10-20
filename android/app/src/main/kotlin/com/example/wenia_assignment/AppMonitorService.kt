@@ -2,9 +2,11 @@ package com.alecodeando.weniatest
 
 import android.app.usage.UsageStatsManager
 import android.app.usage.UsageEvents
+import android.content.BroadcastReceiver
 import android.content.Context
-import android.app.Service
 import android.content.Intent
+import android.content.IntentFilter
+import android.app.Service
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -19,6 +21,7 @@ class AppMonitorService : Service() {
     private var lastAppPackage: String? = null
     private var appTimerRunnable: Runnable? = null
     private var totalUsageTime = 0 // Tiempo de uso total en segundos
+    private var isScreenOn = true // Estado de la pantalla
 
     // Lista de paquetes permitidos
     private val allowedPackages = listOf(
@@ -28,16 +31,43 @@ class AppMonitorService : Service() {
         // Agrega más paquetes según lo necesites
     )
 
+    // BroadcastReceiver para manejar el estado de la pantalla
+    private val screenStateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            when (intent?.action) {
+                Intent.ACTION_SCREEN_OFF -> {
+                    isScreenOn = false
+                    stopTracking(lastAppPackage) // Pausar cuando la pantalla se apaga
+                    Log.d("AppMonitorService", "Pantalla apagada")
+                }
+                Intent.ACTION_SCREEN_ON -> {
+                    isScreenOn = true
+                    lastAppPackage?.let { startTracking(it) } // Reanudar cuando la pantalla se enciende
+                    Log.d("AppMonitorService", "Pantalla encendida")
+                }
+            }
+        }
+    }
+
     override fun onCreate() {
         super.onCreate()
         usageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+
+        // Registrar el BroadcastReceiver para los eventos de pantalla
+        val filter = IntentFilter(Intent.ACTION_SCREEN_ON).apply {
+            addAction(Intent.ACTION_SCREEN_OFF)
+        }
+        registerReceiver(screenStateReceiver, filter)
+
         startMonitoring()
     }
 
     private fun startMonitoring() {
         monitorRunnable = object : Runnable {
             override fun run() {
-                checkForegroundApp()
+                if (isScreenOn) {
+                    checkForegroundApp()
+                }
                 handler.postDelayed(this, 1000) // Verificación cada segundo
             }
         }
@@ -102,16 +132,17 @@ class AppMonitorService : Service() {
         appTimerRunnable?.let { handler.post(it) }
     }
 
-    private fun stopTracking(packageName: String) {
+    private fun stopTracking(packageName: String?) {
         appTimerRunnable?.let { handler.removeCallbacks(it) }
-        val totalUsageTimeNow = getAppUsageTime(packageName) // Obtener tiempo acumulado desde el sistema
-        Log.d("AppMonitorService", "App cerrada: $packageName - Tiempo total: ${formatTime(totalUsageTimeNow)}")
+        if (packageName != null) {
+            val totalUsageTimeNow = getAppUsageTime(packageName) // Obtener tiempo acumulado desde el sistema
+            Log.d("AppMonitorService", "App cerrada: $packageName - Tiempo total: ${formatTime(totalUsageTimeNow)}")
 
-        // Enviar señal para cerrar el widget flotante
-        val intent = Intent(this@AppMonitorService, FloatingWidgetService::class.java)
-        intent.action = "CLOSE_WIDGET" // Accion para cerrar el widget
-        startService(intent)
-        
+            // Enviar señal para cerrar el widget flotante
+            val intent = Intent(this@AppMonitorService, FloatingWidgetService::class.java)
+            intent.action = "CLOSE_WIDGET" // Accion para cerrar el widget
+            startService(intent)
+        }
     }
 
     private fun getAppUsageTime(packageName: String): Int {
@@ -147,6 +178,9 @@ class AppMonitorService : Service() {
         super.onDestroy()
         monitorRunnable?.let { handler.removeCallbacks(it) }
         appTimerRunnable?.let { handler.removeCallbacks(it) }
+
+        // Desregistrar el BroadcastReceiver
+        unregisterReceiver(screenStateReceiver)
     }
 
     override fun onBind(intent: Intent?): IBinder? {
