@@ -1,10 +1,10 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Color de fondo -->
-    <solid android:color="#1B5E20" /> <!-- Verde oscuro -->
+    <!-- Color de fondo con transparencia -->
+    <solid android:color="#801B5E20" /> <!-- Verde oscuro con 50% de transparencia -->
 
-    <!-- Borde redondeado -->
-    <corners android:radius="24dp" /> <!-- Aumenta el valor del radio si es necesario -->
+    <!-- Forma circular -->
+    <corners android:radius="100dp" /> <!-- Valor alto para hacer el contenedor circular -->
 
-    <!-- Borde opcional -->
-    <stroke android:width="2dp" android:color="#FFFFFF" /> <!-- Borde blanco -->
+    <!-- Borde blanco -->
+    <stroke android:width="2dp" android:color="#FFFFFF" />
 </shape>
