@@ -120,8 +120,8 @@ class FloatingWidgetService : Service() {
 
         val backgroundColor = when {
             usageSeconds < 1800 -> Color.parseColor("#1B5E20")
-            usageSeconds in 1800..2700 -> Color.YELLOW
-            else -> Color.RED
+            usageSeconds in 1800..2700 -> Color.parseColor("#E6C701")
+            else -> Color.parseColor("#E60F00")
         }
         floatingView.setBackgroundColor(backgroundColor)
     }
