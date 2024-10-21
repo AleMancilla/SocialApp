@@ -1,16 +1,15 @@
-<!-- res/layout/floating_widget_layout.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#AAFFFFFF" 
     android:orientation="vertical"
+    android:background="@drawable/floating_widget_background"
     android:padding="8dp">
 
     <TextView
         android:id="@+id/usage_time_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0 segundos"
-        android:textSize="16sp"
-        android:textColor="#000000" />
+        android:text="00:00:00"
+        android:textColor="@android:color/white"
+        android:textSize="11sp" /> <!-- Tamaño del texto más pequeño -->
 </LinearLayout>

@@ -121,9 +121,10 @@ class AppMonitorService : Service() {
                 val formattedTime = formatTime(totalUsageTime)
                 Log.d("AppMonitorService", "App en uso: $packageName - Tiempo: $formattedTime")
 
-                // Enviar el tiempo de uso al servicio del widget flotante
+                // Enviar el tiempo de uso al servicio del widget flotante, incluyendo los segundos totales
                 val intent = Intent(this@AppMonitorService, FloatingWidgetService::class.java)
                 intent.putExtra("usage_time", formattedTime)
+                intent.putExtra("usage_seconds", totalUsageTime) // Agregar el tiempo en segundos
                 startService(intent)
 
                 handler.postDelayed(this, 1000) // Incrementa el contador cada segundo

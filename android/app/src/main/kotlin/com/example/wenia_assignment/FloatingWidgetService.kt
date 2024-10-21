@@ -13,6 +13,8 @@ import android.widget.TextView
 import android.graphics.PixelFormat
 import android.view.Gravity
 import android.view.MotionEvent
+import android.graphics.Color
+
 
 class FloatingWidgetService : Service() {
 
@@ -32,7 +34,14 @@ class FloatingWidgetService : Service() {
                     "CLOSE_WIDGET" -> closeWidget() // Cerrar el widget flotante
                     else -> {
                         val usageTime = it.getStringExtra("usage_time")
-                        usageTime?.let { time -> updateUsageTime(time) }
+                        usageTime?.let { time -> 
+                            // Convertir tiempo a segundos
+                            val timeParts = time.split(":").map { part -> part.toIntOrNull() ?: 0 }
+                            val usageSeconds = timeParts[0] * 3600 + timeParts[1] * 60 + timeParts[2]
+
+                            // Llamar a updateUsageTime con ambos parámetros
+                            updateUsageTime(time, usageSeconds)
+                        }
                     }
                 }
             }
@@ -69,7 +78,7 @@ class FloatingWidgetService : Service() {
         windowManager.addView(floatingView, params)
 
         // Hacer que el widget flotante sea arrastrable
-        floatingView.setOnTouchListener { v, event ->
+        floatingView.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     initialX = params.x
@@ -89,10 +98,22 @@ class FloatingWidgetService : Service() {
         }
     }
 
-    fun updateUsageTime(usageTime: String) {
+    // Función para actualizar el tiempo de uso y cambiar el color según los segundos
+    fun updateUsageTime(usageTime: String, usageSeconds: Int) {
         val usageTextView = floatingView.findViewById<TextView>(R.id.usage_time_text_view)
         usageTextView.text = usageTime
+
+        // Cambiar el color de fondo dependiendo del tiempo en segundos
+        val backgroundColor = when {
+            usageSeconds < 1800 -> Color.parseColor("#1B5E20") // Menos de 30 minutos
+            usageSeconds in 1800..2700 -> Color.YELLOW // Entre 30 y 45 minutos
+            else -> Color.RED // Más de 45 minutos
+        }
+
+        // Establecer el color de fondo del layout
+        floatingView.setBackgroundColor(backgroundColor)
     }
+
 
     private fun closeWidget() {
         Log.d("FloatingWidgetService", "Cerrando widget flotante")
