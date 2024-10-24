@@ -20,6 +20,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
+import android.os.VibrationEffect
+import android.os.Vibrator
 
 class AppMonitorService : Service() {
 
@@ -220,9 +222,11 @@ class AppMonitorService : Service() {
 
     // Función para mostrar el popup cuando el tiempo de uso es excedido
     private fun showUsageLimitPopup(packageName: String) {
+        // Crear un LayoutInflater para inflar el diseño personalizado del popup
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView = inflater.inflate(R.layout.usage_limit_popup, null)
 
+        // Configurar los parámetros del popup para que se muestre sobre cualquier app
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -232,19 +236,25 @@ class AppMonitorService : Service() {
         )
         params.gravity = Gravity.CENTER
 
+        // Agregar la vista al WindowManager
         val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         windowManager.addView(popupView, params)
 
+        // Configurar el botón de cerrar dentro del popup
         val closeButton = popupView.findViewById<Button>(R.id.close_popup_button)
         closeButton.setOnClickListener {
             windowManager.removeView(popupView)
         }
 
+        // Configurar el botón de "1 minuto más"
         val oneMoreMinuteButton = popupView.findViewById<Button>(R.id.one_more_minute_button)
         oneMoreMinuteButton.setOnClickListener {
-            extendUsageTime(packageName) // Extender el tiempo de uso solo para la app actual
-            windowManager.removeView(popupView) // Cerrar el popup
+            extendUsageTime(packageName)
+            windowManager.removeView(popupView)
         }
+
+        // Vibrar cuando el popup se muestre
+        vibratePhone()
     }
      // Método para extender el tiempo de uso en 1 minuto
     private fun extendUsageTime(packageName: String) {
@@ -252,6 +262,33 @@ class AppMonitorService : Service() {
         extraTimePerApp[packageName] = currentExtraTime + 60 // Añadir 60 segundos al tiempo extra de la app actual
         hasShownLimitPopup = false // Permitir que el popup se muestre nuevamente solo si se agota el tiempo extra
         Log.d("AppMonitorService", "Se ha añadido 1 minuto extra a $packageName")
+    }
+
+     // Función para hacer vibrar el teléfono
+    // private fun vibratePhone() {
+    //     val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    //     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    //         // Para versiones de Android O (API 26) y superiores
+    //         val vibrationEffect = VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE) // Vibrar por 500ms
+    //         vibrator.vibrate(vibrationEffect)
+    //     } else {
+    //         // Para versiones anteriores
+    //         vibrator.vibrate(500) // Vibrar por 500ms
+    //     }
+    // }
+    private fun vibratePhone() {
+        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Para versiones de Android O (API 26) y superiores
+            val pattern = longArrayOf(0, 500, 200, 500, 200, 500, 200, 500, 200, 1500) // Vibrar 500ms, pausar 200ms, repetir
+            val amplitudes = intArrayOf(0, 255, 0, 255, 0, 255, 0, 255, 0, 255) // 255 es la vibración más fuerte
+
+            vibrator.vibrate(VibrationEffect.createWaveform(pattern, amplitudes, -1)) // -1 para no repetir
+    } else {
+            // Para versiones anteriores
+            val pattern = longArrayOf(0, 500, 200, 500, 200, 500, 200, 500, 200, 1500) // Vibrar 500ms, pausar 200ms, repetir
+            vibrator.vibrate(pattern, -1) // -1 indica que no se repite el patrón
+        }
     }
 
 }

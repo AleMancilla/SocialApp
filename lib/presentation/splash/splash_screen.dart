@@ -43,7 +43,8 @@ class _SplashScreenState extends State<SplashScreen>
       CustomNavigator.pushReplacement(context, HomeScreen());
     } else {
       // CustomNavigator.pushReplacement(context, AuthHomeScreen());
-      CustomNavigator.pushReplacement(context, FirstStepsScreen());
+      CustomNavigator.pushReplacement(context, HomeScreen());
+      // CustomNavigator.pushReplacement(context, FirstStepsScreen());
     }
   }
 
