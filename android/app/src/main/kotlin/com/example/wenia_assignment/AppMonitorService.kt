@@ -30,7 +30,8 @@ class AppMonitorService : Service() {
     private var appTimerRunnable: Runnable? = null
     private var totalUsageTime = 0 // Tiempo de uso total en segundos
     private var isScreenOn = true // Estado de la pantalla
-    private var hasShownPopup = false // Variable para asegurarnos de que el popup solo se muestra una vez
+    private var hasShownLimitPopup = false // Variable para controlar si el popup ya fue mostrado
+    private val usageLimitInSeconds = 15 * 60 // 15 minutos
 
 
     // Lista de paquetes permitidos
@@ -121,6 +122,7 @@ class AppMonitorService : Service() {
         }
     }
 
+    
     private fun startTracking(packageName: String) {
         totalUsageTime = getAppUsageTime(packageName) // Obtener tiempo total acumulado
         Log.d("AppMonitorService", "App abierta: $packageName - Tiempo acumulado: ${formatTime(totalUsageTime)}")
@@ -129,20 +131,19 @@ class AppMonitorService : Service() {
             override fun run() {
                 totalUsageTime++
                 val formattedTime = formatTime(totalUsageTime)
-                Log.d("AppMonitorService", "App en uso: $totalUsageTime $packageName - Tiempo: $formattedTime ")
+                Log.d("AppMonitorService", "App en uso: $packageName - Tiempo: $formattedTime")
 
-                // Revisar si el tiempo de uso excede los 15 minutos (900 segundos)
-                if (totalUsageTime >= 4920 && !hasShownPopup) {
-                    // Mostrar el popup si no se ha mostrado aún
-                    showUsageExceededPopup()
-                    hasShownPopup = true // Asegurarnos de que solo se muestre una vez
-                }
-
-                // Enviar el tiempo de uso al servicio del widget flotante
+                // Enviar el tiempo de uso al servicio del widget flotante, incluyendo los segundos totales
                 val intent = Intent(this@AppMonitorService, FloatingWidgetService::class.java)
                 intent.putExtra("usage_time", formattedTime)
                 intent.putExtra("usage_seconds", totalUsageTime) // Agregar el tiempo en segundos
                 startService(intent)
+
+                // Mostrar el popup si se excede el límite de uso y no se ha mostrado antes
+                if (totalUsageTime >= usageLimitInSeconds && !hasShownLimitPopup) {
+                    showUsageLimitPopup()
+                    hasShownLimitPopup = true // Asegurarse de que solo se muestre una vez
+                }
 
                 handler.postDelayed(this, 1000) // Incrementa el contador cada segundo
             }
@@ -206,27 +207,30 @@ class AppMonitorService : Service() {
     }
 
     // Función para mostrar el popup cuando el tiempo de uso es excedido
-    private fun showUsageExceededPopup() {
-        val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+    private fun showUsageLimitPopup() {
+        // Crear un LayoutInflater para inflar el diseño personalizado del popup
+        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val popupView = inflater.inflate(R.layout.usage_limit_popup, null) // Asegúrate de crear este layout en res/layout
 
-        val inflater = LayoutInflater.from(this)
-        val popupView = inflater.inflate(R.layout.popup_usage_exceeded, null)
-
+        // Configurar los parámetros del popup para que se muestre sobre cualquier app
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT,
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY else WindowManager.LayoutParams.TYPE_PHONE,
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT
         )
         params.gravity = Gravity.CENTER
 
+        // Agregar la vista al WindowManager
+        val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         windowManager.addView(popupView, params)
 
-        // Botón para cerrar el popup
+        // Configurar el botón de cerrar dentro del popup
         val closeButton = popupView.findViewById<Button>(R.id.close_popup_button)
         closeButton.setOnClickListener {
-            windowManager.removeView(popupView) // Eliminar el popup cuando se presione el botón
+            // Remover la vista del popup
+            windowManager.removeView(popupView)
         }
     }
 }
