@@ -34,6 +34,8 @@ class AppMonitorService : Service() {
     private val usageLimitInSeconds = 15 * 60 // 15 minutos
 
     private var remainingExtraTime = 0 // Tiempo extra restante en segundos
+    private var extraTimePerApp = mutableMapOf<String, Int>() // Mapa para el tiempo extra por aplicación
+
 
 
     // Lista de paquetes permitidos
@@ -140,13 +142,17 @@ class AppMonitorService : Service() {
                 intent.putExtra("usage_seconds", totalUsageTime)
                 startService(intent)
 
-                if (totalUsageTime >= usageLimitInSeconds && !hasShownLimitPopup) {
-                    if (remainingExtraTime > 0) {
-                        remainingExtraTime-- // Reducir el tiempo extra restante
-                    } else {
-                        showUsageLimitPopup()
-                        hasShownLimitPopup = true
-                    }
+                // Obtener el tiempo extra para la aplicación actual
+                val extraTime = extraTimePerApp[packageName] ?: 0
+
+                // Verificar si ya se ha excedido el límite y si aún queda tiempo adicional
+                if (totalUsageTime >= usageLimitInSeconds && extraTime <= 0 && !hasShownLimitPopup) {
+                    showUsageLimitPopup(packageName) // Mostrar popup si se excede el tiempo límite
+                    hasShownLimitPopup = true
+                } else if (extraTime > 0) {
+                    // Si hay tiempo extra, reducirlo y continuar
+                    extraTimePerApp[packageName] = extraTime - 1
+                    Log.d("AppMonitorService", "Tiempo extra restante para $packageName: ${extraTimePerApp[packageName]}")
                 }
 
                 handler.postDelayed(this, 1000) // Incrementa cada segundo
@@ -158,13 +164,15 @@ class AppMonitorService : Service() {
     private fun stopTracking(packageName: String?) {
         appTimerRunnable?.let { handler.removeCallbacks(it) }
         if (packageName != null) {
-            val totalUsageTimeNow = getAppUsageTime(packageName) // Obtener tiempo acumulado desde el sistema
+            val totalUsageTimeNow = getAppUsageTime(packageName)
             Log.d("AppMonitorService", "App cerrada: $packageName - Tiempo total: ${formatTime(totalUsageTimeNow)}")
 
-            // Enviar señal para cerrar el widget flotante
             val intent = Intent(this@AppMonitorService, FloatingWidgetService::class.java)
-            intent.action = "CLOSE_WIDGET" // Accion para cerrar el widget
+            intent.action = "CLOSE_WIDGET"
             startService(intent)
+
+            // Mantener el tiempo extra si la aplicación se pasa a segundo plano
+            // No eliminamos el tiempo extra aquí, para que no se pierda cuando regrese al primer plano
         }
     }
 
@@ -211,7 +219,7 @@ class AppMonitorService : Service() {
     }
 
     // Función para mostrar el popup cuando el tiempo de uso es excedido
-    private fun showUsageLimitPopup() {
+    private fun showUsageLimitPopup(packageName: String) {
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView = inflater.inflate(R.layout.usage_limit_popup, null)
 
@@ -232,17 +240,18 @@ class AppMonitorService : Service() {
             windowManager.removeView(popupView)
         }
 
-        // Botón "1 MINUTO MÁS"
         val oneMoreMinuteButton = popupView.findViewById<Button>(R.id.one_more_minute_button)
         oneMoreMinuteButton.setOnClickListener {
-            extendUsageTime()
+            extendUsageTime(packageName) // Extender el tiempo de uso solo para la app actual
             windowManager.removeView(popupView) // Cerrar el popup
         }
     }
      // Método para extender el tiempo de uso en 1 minuto
-    private fun extendUsageTime() {
-        remainingExtraTime += 60 // Añadir 60 segundos
-        hasShownLimitPopup = false // Permitir mostrar el popup otra vez
+    private fun extendUsageTime(packageName: String) {
+        val currentExtraTime = extraTimePerApp[packageName] ?: 0
+        extraTimePerApp[packageName] = currentExtraTime + 60 // Añadir 60 segundos al tiempo extra de la app actual
+        hasShownLimitPopup = false // Permitir que el popup se muestre nuevamente solo si se agota el tiempo extra
+        Log.d("AppMonitorService", "Se ha añadido 1 minuto extra a $packageName")
     }
 
 }
