@@ -13,6 +13,14 @@ import android.os.Looper
 import android.util.Log
 import java.util.Calendar
 
+import android.graphics.PixelFormat
+import android.os.Build
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.WindowManager
+import android.widget.Button
+
 class AppMonitorService : Service() {
 
     private val handler = Handler(Looper.getMainLooper())
@@ -22,6 +30,8 @@ class AppMonitorService : Service() {
     private var appTimerRunnable: Runnable? = null
     private var totalUsageTime = 0 // Tiempo de uso total en segundos
     private var isScreenOn = true // Estado de la pantalla
+    private var hasShownPopup = false // Variable para asegurarnos de que el popup solo se muestra una vez
+
 
     // Lista de paquetes permitidos
     private val allowedPackages = listOf(
@@ -119,9 +129,16 @@ class AppMonitorService : Service() {
             override fun run() {
                 totalUsageTime++
                 val formattedTime = formatTime(totalUsageTime)
-                Log.d("AppMonitorService", "App en uso: $packageName - Tiempo: $formattedTime")
+                Log.d("AppMonitorService", "App en uso: $totalUsageTime $packageName - Tiempo: $formattedTime ")
 
-                // Enviar el tiempo de uso al servicio del widget flotante, incluyendo los segundos totales
+                // Revisar si el tiempo de uso excede los 15 minutos (900 segundos)
+                if (totalUsageTime >= 4920 && !hasShownPopup) {
+                    // Mostrar el popup si no se ha mostrado aún
+                    showUsageExceededPopup()
+                    hasShownPopup = true // Asegurarnos de que solo se muestre una vez
+                }
+
+                // Enviar el tiempo de uso al servicio del widget flotante
                 val intent = Intent(this@AppMonitorService, FloatingWidgetService::class.java)
                 intent.putExtra("usage_time", formattedTime)
                 intent.putExtra("usage_seconds", totalUsageTime) // Agregar el tiempo en segundos
@@ -186,5 +203,30 @@ class AppMonitorService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
+    }
+
+    // Función para mostrar el popup cuando el tiempo de uso es excedido
+    private fun showUsageExceededPopup() {
+        val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+
+        val inflater = LayoutInflater.from(this)
+        val popupView = inflater.inflate(R.layout.popup_usage_exceeded, null)
+
+        val params = WindowManager.LayoutParams(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY else WindowManager.LayoutParams.TYPE_PHONE,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            PixelFormat.TRANSLUCENT
+        )
+        params.gravity = Gravity.CENTER
+
+        windowManager.addView(popupView, params)
+
+        // Botón para cerrar el popup
+        val closeButton = popupView.findViewById<Button>(R.id.close_popup_button)
+        closeButton.setOnClickListener {
+            windowManager.removeView(popupView) // Eliminar el popup cuando se presione el botón
+        }
     }
 }
