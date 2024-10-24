@@ -80,8 +80,13 @@ class MainActivity: FlutterActivity() {
 
     // Método para enviar datos desde Kotlin a Flutter
     fun sendToFlutter(message: String) {
+        try {
         MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger, CHANNEL)
             .invokeMethod("receiveFromKotlin", message)
+        }
+        catch (e: Exception) {
+            Log.e("Error in channel", "Error")
+        }
     }
 
     // Llamar a sendToFlutter automáticamente
