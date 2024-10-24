@@ -6,7 +6,6 @@
     android:gravity="center"
     android:background="#AA000000"> <!-- Fondo transparente -->
 
-    <!-- Contenedor del mensaje con bordes redondeados -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,7 +14,6 @@
         android:background="@drawable/rounded_rectangle_bg"
         android:gravity="center">
 
-        <!-- Texto del mensaje -->
         <TextView
             android:id="@+id/usage_limit_message"
             android:layout_width="wrap_content"
@@ -24,6 +22,17 @@
             android:textSize="18sp"
             android:textColor="@android:color/white"
             android:layout_marginBottom="10dp" />
+
+        <!-- Botón para 1 minuto más -->
+        <Button
+            android:id="@+id/one_more_minute_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 Minuto Más"
+            android:textSize="16sp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/rounded_button_bg"
+            android:textColor="@android:color/white" />
 
         <!-- Botón para cerrar -->
         <Button

@@ -33,6 +33,8 @@ class AppMonitorService : Service() {
     private var hasShownLimitPopup = false // Variable para controlar si el popup ya fue mostrado
     private val usageLimitInSeconds = 15 * 60 // 15 minutos
 
+    private var remainingExtraTime = 0 // Tiempo extra restante en segundos
+
 
     // Lista de paquetes permitidos
     private val allowedPackages = listOf(
@@ -124,7 +126,7 @@ class AppMonitorService : Service() {
 
     
     private fun startTracking(packageName: String) {
-        totalUsageTime = getAppUsageTime(packageName) // Obtener tiempo total acumulado
+        totalUsageTime = getAppUsageTime(packageName)
         Log.d("AppMonitorService", "App abierta: $packageName - Tiempo acumulado: ${formatTime(totalUsageTime)}")
 
         appTimerRunnable = object : Runnable {
@@ -133,19 +135,21 @@ class AppMonitorService : Service() {
                 val formattedTime = formatTime(totalUsageTime)
                 Log.d("AppMonitorService", "App en uso: $packageName - Tiempo: $formattedTime")
 
-                // Enviar el tiempo de uso al servicio del widget flotante, incluyendo los segundos totales
                 val intent = Intent(this@AppMonitorService, FloatingWidgetService::class.java)
                 intent.putExtra("usage_time", formattedTime)
-                intent.putExtra("usage_seconds", totalUsageTime) // Agregar el tiempo en segundos
+                intent.putExtra("usage_seconds", totalUsageTime)
                 startService(intent)
 
-                // Mostrar el popup si se excede el límite de uso y no se ha mostrado antes
                 if (totalUsageTime >= usageLimitInSeconds && !hasShownLimitPopup) {
-                    showUsageLimitPopup()
-                    hasShownLimitPopup = true // Asegurarse de que solo se muestre una vez
+                    if (remainingExtraTime > 0) {
+                        remainingExtraTime-- // Reducir el tiempo extra restante
+                    } else {
+                        showUsageLimitPopup()
+                        hasShownLimitPopup = true
+                    }
                 }
 
-                handler.postDelayed(this, 1000) // Incrementa el contador cada segundo
+                handler.postDelayed(this, 1000) // Incrementa cada segundo
             }
         }
         appTimerRunnable?.let { handler.post(it) }
@@ -208,11 +212,9 @@ class AppMonitorService : Service() {
 
     // Función para mostrar el popup cuando el tiempo de uso es excedido
     private fun showUsageLimitPopup() {
-        // Crear un LayoutInflater para inflar el diseño personalizado del popup
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val popupView = inflater.inflate(R.layout.usage_limit_popup, null) // Asegúrate de crear este layout en res/layout
+        val popupView = inflater.inflate(R.layout.usage_limit_popup, null)
 
-        // Configurar los parámetros del popup para que se muestre sobre cualquier app
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -222,15 +224,25 @@ class AppMonitorService : Service() {
         )
         params.gravity = Gravity.CENTER
 
-        // Agregar la vista al WindowManager
         val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         windowManager.addView(popupView, params)
 
-        // Configurar el botón de cerrar dentro del popup
         val closeButton = popupView.findViewById<Button>(R.id.close_popup_button)
         closeButton.setOnClickListener {
-            // Remover la vista del popup
             windowManager.removeView(popupView)
         }
+
+        // Botón "1 MINUTO MÁS"
+        val oneMoreMinuteButton = popupView.findViewById<Button>(R.id.one_more_minute_button)
+        oneMoreMinuteButton.setOnClickListener {
+            extendUsageTime()
+            windowManager.removeView(popupView) // Cerrar el popup
+        }
     }
+     // Método para extender el tiempo de uso en 1 minuto
+    private fun extendUsageTime() {
+        remainingExtraTime += 60 // Añadir 60 segundos
+        hasShownLimitPopup = false // Permitir mostrar el popup otra vez
+    }
+
 }
