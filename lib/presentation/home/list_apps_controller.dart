@@ -4,6 +4,7 @@ import 'package:usage_stats/usage_stats.dart';
 
 class ListAppsController extends GetxController {
   var apps = <Application>[].obs;
+  var filteredApps = <Application>[].obs;
   var appsSelectable = <String>[
     'com.zhiliaoapp.musically',
     'com.whatsapp',
@@ -18,6 +19,17 @@ class ListAppsController extends GetxController {
     super.onInit();
     getInstalledApps();
     getUsageStats();
+  }
+
+  void filterApps(String query) {
+    if (query.isEmpty) {
+      filteredApps.value = apps;
+    } else {
+      filteredApps.value = apps
+          .where(
+              (app) => app.appName.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    }
   }
 
   void selectApp(String package) {
@@ -36,6 +48,7 @@ class ListAppsController extends GetxController {
         includeSystemApps: false);
 
     apps.value = installedApps;
+    filteredApps.value = installedApps; // Inicializar la lista filtrada
     sortAppsByUsage();
   }
 

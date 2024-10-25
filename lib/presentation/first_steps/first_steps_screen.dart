@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:wenia_assignment/core/utils/custom_navigator.dart';
 import 'package:wenia_assignment/presentation/auth/auth_home_screen.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_cero.dart';
+import 'package:wenia_assignment/presentation/first_steps/steps/step_four.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_one.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_tree.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_two.dart';
@@ -17,7 +18,7 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
   final PageController _pageController = PageController();
   StepsController controller = Get.put(StepsController());
   int _currentStep = 0;
-  final int _totalSteps = 4;
+  final int _totalSteps = 5;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +41,7 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
                 StepOne(),
                 StepTwo(),
                 StepTree(),
+                StepFour(),
                 Center(child: Text('Bienvenido')),
               ],
             ),
@@ -84,7 +86,7 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
           GestureDetector(
             onTap: () {
               print(' ---- _pageController.page ----- ${_pageController.page}');
-              if (_pageController.page == 3) {
+              if (_pageController.page == 4) {
                 CustomNavigator.push(context, AuthHomeScreen());
                 return;
               }
