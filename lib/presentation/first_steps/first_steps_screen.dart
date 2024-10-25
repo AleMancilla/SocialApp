@@ -4,6 +4,7 @@ import 'package:wenia_assignment/core/utils/custom_navigator.dart';
 import 'package:wenia_assignment/presentation/auth/auth_home_screen.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_cero.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_one.dart';
+import 'package:wenia_assignment/presentation/first_steps/steps/step_tree.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_two.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/steps_controller.dart';
 
@@ -38,6 +39,7 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
                 StepCero(),
                 StepOne(),
                 StepTwo(),
+                StepTree(),
                 Center(child: Text('Bienvenido')),
               ],
             ),
@@ -82,7 +84,7 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
           GestureDetector(
             onTap: () {
               print(' ---- _pageController.page ----- ${_pageController.page}');
-              if (_pageController.page == 2) {
+              if (_pageController.page == 3) {
                 CustomNavigator.push(context, AuthHomeScreen());
                 return;
               }

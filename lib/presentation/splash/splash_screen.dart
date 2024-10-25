@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:wenia_assignment/presentation/first_steps/first_steps_screen.dart';
 import 'package:wenia_assignment/presentation/home/home_screen.dart';
+import 'package:wenia_assignment/presentation/home/list_apps_controller.dart';
 import 'package:wenia_assignment/presentation/widgets/scaffold_background.dart';
 import '/presentation/auth/auth_home_screen.dart';
 import '/core/theme/custom_colors.dart';
@@ -17,6 +19,7 @@ class _SplashScreenState extends State<SplashScreen>
   AnimationController? _controller;
   Animation<double>? _animation;
   final prefs = UserPreferences();
+  final ListAppsController listAppscontroller = Get.put(ListAppsController());
 
   @override
   void initState() {
@@ -43,8 +46,8 @@ class _SplashScreenState extends State<SplashScreen>
       CustomNavigator.pushReplacement(context, HomeScreen());
     } else {
       // CustomNavigator.pushReplacement(context, AuthHomeScreen());
-      CustomNavigator.pushReplacement(context, HomeScreen());
-      // CustomNavigator.pushReplacement(context, FirstStepsScreen());
+      // CustomNavigator.pushReplacement(context, HomeScreen());
+      CustomNavigator.pushReplacement(context, FirstStepsScreen());
     }
   }
 

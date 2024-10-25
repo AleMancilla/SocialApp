@@ -4,6 +4,13 @@ import 'package:usage_stats/usage_stats.dart';
 
 class ListAppsController extends GetxController {
   var apps = <Application>[].obs;
+  var appsSelectable = <String>[
+    'com.zhiliaoapp.musically',
+    'com.whatsapp',
+    'com.facebook.katana',
+    'com.facebook.orca',
+    'com.instagram.android',
+  ].obs;
   var appUsageStats = <String, Duration>{}.obs;
 
   @override
@@ -11,6 +18,15 @@ class ListAppsController extends GetxController {
     super.onInit();
     getInstalledApps();
     getUsageStats();
+  }
+
+  void selectApp(String package) {
+    if (appsSelectable.contains(package)) {
+      appsSelectable.remove(package);
+    } else {
+      appsSelectable.add(package);
+    }
+    sortAppsByUsage();
   }
 
   Future<void> getInstalledApps() async {
@@ -37,7 +53,8 @@ class ListAppsController extends GetxController {
     }
 
     DateTime endDate = DateTime.now();
-    DateTime startDate = endDate.subtract(Duration(days: 1));
+    DateTime startDate = DateTime(endDate.year, endDate.month,
+        endDate.day); // Inicia desde las 00:00 de hoy
 
     try {
       List<UsageInfo> stats =
@@ -68,9 +85,21 @@ class ListAppsController extends GetxController {
 
   void sortAppsByUsage() {
     apps.sort((a, b) {
+      // Verificar si las aplicaciones están en appsSelectable
+      bool isASelectable = appsSelectable.contains(a.packageName);
+      bool isBSelectable = appsSelectable.contains(b.packageName);
+
+      // Priorizar apps en appsSelectable
+      if (isASelectable && !isBSelectable) {
+        return -1; // a tiene prioridad sobre b
+      } else if (!isASelectable && isBSelectable) {
+        return 1; // b tiene prioridad sobre a
+      }
+
+      // Si ambos o ninguno están en appsSelectable, ordenar por tiempo de uso
       final durationA = appUsageStats[a.packageName] ?? Duration();
       final durationB = appUsageStats[b.packageName] ?? Duration();
-      return durationB.compareTo(durationA);
+      return durationB.compareTo(durationA); // Ordenar por tiempo de uso
     });
   }
 
