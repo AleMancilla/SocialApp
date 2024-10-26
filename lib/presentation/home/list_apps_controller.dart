@@ -14,11 +14,30 @@ class ListAppsController extends GetxController {
   ].obs;
   var appUsageStats = <String, Duration>{}.obs;
 
+  // Tiempo máximo de uso para cada app en appsSelectable
+  var maxUsageTime = <String, Duration>{}.obs;
+
   @override
   void onInit() {
     super.onInit();
     getInstalledApps();
     getUsageStats();
+    setDefaultMaxUsageTime();
+  }
+
+  // Función para asignar un tiempo máximo por defecto para cada app en appsSelectable
+  void setDefaultMaxUsageTime() {
+    for (var app in appsSelectable) {
+      maxUsageTime[app] = Duration(
+          minutes: 30); // Por ejemplo, 1 hora como tiempo máximo predeterminado
+    }
+  }
+
+  // Función para actualizar el tiempo máximo de una aplicación específica
+  void updateMaxUsageTime(String packageName, Duration maxTime) {
+    if (appsSelectable.contains(packageName)) {
+      maxUsageTime[packageName] = maxTime;
+    }
   }
 
   void filterApps(String query) {
@@ -35,8 +54,10 @@ class ListAppsController extends GetxController {
   void selectApp(String package) {
     if (appsSelectable.contains(package)) {
       appsSelectable.remove(package);
+      maxUsageTime.remove(package);
     } else {
       appsSelectable.add(package);
+      maxUsageTime[package] = Duration(hours: 1); // Tiempo predeterminado
     }
     sortAppsByUsage();
   }
@@ -48,7 +69,7 @@ class ListAppsController extends GetxController {
         includeSystemApps: false);
 
     apps.value = installedApps;
-    filteredApps.value = installedApps; // Inicializar la lista filtrada
+    filteredApps.value = installedApps;
     sortAppsByUsage();
   }
 
@@ -74,8 +95,6 @@ class ListAppsController extends GetxController {
           await UsageStats.queryUsageStats(startDate, endDate);
 
       for (var stat in stats) {
-        print(
-            ' ==== stat.packageName = ${stat.packageName} -- ${stat.totalTimeInForeground}');
         if (stat.packageName != null && stat.totalTimeInForeground != null) {
           if (appUsageStats[stat.packageName!] == null) {
             appUsageStats[stat.packageName!] =
@@ -88,8 +107,6 @@ class ListAppsController extends GetxController {
         }
       }
 
-      print(stats);
-
       sortAppsByUsage();
     } catch (e) {
       print("Error obteniendo estadísticas de uso: $e");
@@ -98,21 +115,18 @@ class ListAppsController extends GetxController {
 
   void sortAppsByUsage() {
     apps.sort((a, b) {
-      // Verificar si las aplicaciones están en appsSelectable
       bool isASelectable = appsSelectable.contains(a.packageName);
       bool isBSelectable = appsSelectable.contains(b.packageName);
 
-      // Priorizar apps en appsSelectable
       if (isASelectable && !isBSelectable) {
-        return -1; // a tiene prioridad sobre b
+        return -1;
       } else if (!isASelectable && isBSelectable) {
-        return 1; // b tiene prioridad sobre a
+        return 1;
       }
 
-      // Si ambos o ninguno están en appsSelectable, ordenar por tiempo de uso
       final durationA = appUsageStats[a.packageName] ?? Duration();
       final durationB = appUsageStats[b.packageName] ?? Duration();
-      return durationB.compareTo(durationA); // Ordenar por tiempo de uso
+      return durationB.compareTo(durationA);
     });
   }
 

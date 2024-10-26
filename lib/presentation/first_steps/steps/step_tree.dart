@@ -107,6 +107,7 @@ class _StepTreeState extends State<StepTree> with WidgetsBindingObserver {
                               dense: true,
                               onTap: () {
                                 listAppscontroller.selectApp(app.packageName);
+                                setState(() {});
                               },
                               trailing: Icon(
                                 isSelected

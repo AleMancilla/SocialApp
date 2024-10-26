@@ -50,6 +50,7 @@ dependencies:
   usage_stats:
   overlay_pop_up: ^1.0.3
   package_info_plus:
+  flutter_time_picker_spinner: 
 
 
 dev_dependencies:
