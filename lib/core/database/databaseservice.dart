@@ -51,14 +51,26 @@ class DatabaseService {
     }
   }
 
-  static Future<void> insertUsageLimit(
-      int userId, int appId, int dailyLimit, int notificationInterval) async {
+  static Future<void> deleteUsageLimits(String packageName) async {
+    try {
+      final result = await _channel.invokeMethod('deleteUsageLimits', {
+        'packageName': packageName,
+      });
+      print(result); // Muestra confirmación de eliminación o mensaje de error
+    } catch (e) {
+      print("Error al eliminar la aplicación permitida: $e");
+    }
+  }
+
+  static Future<void> insertUsageLimit(int userId, int appId, int dailyLimit,
+      int notificationInterval, String package) async {
     try {
       final result = await _channel.invokeMethod('insertUsageLimit', {
+        'packageName': package,
         'userId': userId,
         'appId': appId,
         'dailyLimit': dailyLimit,
-        'notificationInterval': notificationInterval,
+        'notificationInterval': notificationInterval
       });
       print(result); // Muestra el ID del límite de uso o mensaje de error
     } catch (e) {

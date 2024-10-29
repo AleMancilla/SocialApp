@@ -55,12 +55,12 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
             onPressed: () async {
               print(' ------ tap');
               // final users = await DatabaseService.getUsers();
-              final response = await DatabaseService.getAllowedApps();
-              // final response = await DatabaseService.getUsageLimits();
+              // final response = await DatabaseService.getAllowedApps();
+              final response = await DatabaseService.getUsageLimits();
               // ApiDatabase.getAllowedApps();
               // ModelDbAllowedApps? data =
               //     await ApiDatabase.getSpecificAllowedApps('com.whatsapp');
-              print(response);
+              print(jsonEncode(response));
             },
             // child: Text('Consulta'),
           ),
@@ -180,19 +180,8 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
                         .contains(app.packageName))
                     .toList();
 
-                selectedApps.forEach(
-                  (element) {
-                    final app = element;
-                    final packageName = app.packageName;
-                    final appName = app.appName;
-                    final maxTime =
-                        listAppscontroller.maxUsageTime[packageName] ??
-                            Duration();
-                    ApiDatabase.insertUsageLimit(
-                        package: element.packageName,
-                        dailyLimit: maxTime.inMinutes);
-                  },
-                );
+                ApiDatabase.insertUsageLimitList(
+                    selectedApps, listAppscontroller.maxUsageTime);
 
                 _pageController.nextPage(
                   duration: Duration(milliseconds: 300),

@@ -7,7 +7,7 @@ import android.content.ContentValues
 import android.util.Log
 
 
-class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "shared_database_2.db", null, 1) {
+class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "shared_database_5.db", null, 5) {
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS Users (
@@ -33,13 +33,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "shared_datab
                 date DATE NOT NULL,
                 start_time TIMESTAMP NOT NULL,
                 end_time TIMESTAMP,
-                total_duration INTEGER,
-                FOREIGN KEY (app_id) REFERENCES AllowedApps(app_id) ON DELETE CASCADE
+                total_duration INTEGER
             )
         """)
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS UsageLimits (
                 limit_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                package_name TEXT NOT NULL,
                 user_id INTEGER,
                 app_id INTEGER,
                 daily_limit INTEGER NOT NULL,
@@ -77,11 +77,17 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "shared_datab
         val db = this.writableDatabase
         return db.delete("AllowedApps", "package_name = ?", arrayOf(packageName))
     }
+    fun deleteUsageLimits(packageName: String): Int {
+        val db = this.writableDatabase
+        return db.delete("UsageLimits", "package_name = ?", arrayOf(packageName))
+    }
 
     // Método para insertar límites de uso
-    fun insertUsageLimit(userId: Int, appId: Int, dailyLimit: Int, notificationInterval: Int): Long {
+    fun insertUsageLimit(packageName:String,userId: Int, appId: Int, dailyLimit: Int, notificationInterval: Int): Long {
         val db = this.writableDatabase
+            Log.e("==>> package_name <<======", "packageName: ${packageName}")
         val values = ContentValues().apply {
+            put("package_name", packageName)
             put("user_id", userId)
             put("app_id", appId)
             put("daily_limit", dailyLimit)
@@ -133,9 +139,16 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "shared_datab
         val cursor = db.rawQuery("SELECT * FROM UsageLimits", null)
         val users = mutableListOf<Map<String, Any>>()
 
+        // Imprimir todas las columnas en el cursor para ver sus nombres y asegurarse de que existen
+        for (i in 0 until cursor.columnCount) {
+            Log.e("==>> ColumnName", "Column $i: ${cursor.getColumnName(i)}")
+        }
+
         if (cursor.moveToFirst()) {
             do {
                 val user = mapOf(
+                    "limit_id" to cursor.getInt(cursor.getColumnIndex("limit_id")),
+                    "package_name" to cursor.getString(cursor.getColumnIndex("package_name")),
                     "user_id" to cursor.getInt(cursor.getColumnIndex("user_id")),
                     "app_id" to cursor.getString(cursor.getColumnIndex("app_id")),
                     "daily_limit" to cursor.getString(cursor.getColumnIndex("daily_limit")),

@@ -3,11 +3,11 @@ import 'package:path/path.dart';
 
 Future<Database> initOpenDatabase() async {
   final databasePath = await getDatabasesPath();
-  final path = join(databasePath, 'shared_database_2.db');
+  final path = join(databasePath, 'shared_database_5.db');
 
   return openDatabase(
     path,
-    version: 1,
+    version: 5,
     onCreate: (db, version) async {
       await db.execute('''
         CREATE TABLE IF NOT EXISTS Users (
@@ -33,18 +33,17 @@ Future<Database> initOpenDatabase() async {
           date DATE NOT NULL,
           start_time TIMESTAMP NOT NULL,
           end_time TIMESTAMP,
-          total_duration INTEGER,
-          FOREIGN KEY (app_id) REFERENCES AllowedApps(app_id) ON DELETE CASCADE
+          total_duration INTEGER
         )
       ''');
       await db.execute('''
         CREATE TABLE IF NOT EXISTS UsageLimits (
           limit_id INTEGER PRIMARY KEY AUTOINCREMENT,
+          package_name TEXT NOT NULL,
           user_id INTEGER,
           app_id INTEGER,
           daily_limit INTEGER NOT NULL,
-          notification_interval INTEGER NOT NULL,
-          FOREIGN KEY (app_id) REFERENCES AllowedApps(app_id) ON DELETE CASCADE
+          notification_interval INTEGER NOT NULL
         )
       ''');
     },

@@ -81,13 +81,23 @@ class MainActivity: FlutterActivity() {
                         result.error("DELETE_ERROR", "Error al eliminar la aplicación permitida o no encontrada.", null)
                     }
                 }
+                "deleteUsageLimits" -> {
+                    val packageName = call.argument<String>("packageName") ?: ""
+                    val rowsDeleted = dbHelper.deleteUsageLimits(packageName)
+                    if (rowsDeleted > 0) {
+                        result.success("deleteUsageLimits permitida eliminada con éxito.")
+                    } else {
+                        result.error("DELETE_ERROR", "Error al eliminar la aplicación permitida o no encontrada.", null)
+                    }
+                }
                 "insertUsageLimit" -> {
+                    val packageName = call.argument<String>("packageName") ?: ""
                     val userId = call.argument<Int>("userId") ?: return@setMethodCallHandler result.error("INVALID_ARGS", "userId es requerido", null)
                     val appId = call.argument<Int>("appId") ?: return@setMethodCallHandler result.error("INVALID_ARGS", "appId es requerido", null)
                     val dailyLimit = call.argument<Int>("dailyLimit") ?: return@setMethodCallHandler result.error("INVALID_ARGS", "dailyLimit es requerido", null)
                     val notificationInterval = call.argument<Int>("notificationInterval") ?: return@setMethodCallHandler result.error("INVALID_ARGS", "notificationInterval es requerido", null)
 
-                    val newRowId = dbHelper.insertUsageLimit(userId, appId, dailyLimit, notificationInterval)
+                    val newRowId = dbHelper.insertUsageLimit(packageName,userId, appId, dailyLimit, notificationInterval)
                     if (newRowId != -1L) {
                         result.success("Límite de uso insertado con ID: $newRowId")
                     } else {
