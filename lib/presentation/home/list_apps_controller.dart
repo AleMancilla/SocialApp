@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:usage_stats/usage_stats.dart';
 import 'package:wenia_assignment/core/database/api_database.dart';
 import 'package:wenia_assignment/core/database/models/model_db_allowed_apps.dart';
+import 'package:wenia_assignment/core/database/models/model_db_usage_limits.dart';
 
 class ListAppsController extends GetxController {
   var apps = <Application>[].obs;
@@ -20,23 +21,32 @@ class ListAppsController extends GetxController {
   var maxUsageTime = <String, Duration>{}.obs;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     getInstalledApps();
     getUsageStats();
-    setDefaultAppSelectable();
-    setDefaultMaxUsageTime();
+    await setDefaultAppSelectable();
+    await setDefaultMaxUsageTime();
   }
 
   // Función para asignar un tiempo máximo por defecto para cada app en appsSelectable
-  void setDefaultMaxUsageTime() async {
+  Future<void> setDefaultMaxUsageTime() async {
+    List<ModelDbUsageLimits> _list = await ApiDatabase.getUsageLimits();
+    print(_list);
     for (var app in appsSelectable) {
-      maxUsageTime[app] = Duration(
-          minutes: 30); // Por ejemplo, 1 hora como tiempo máximo predeterminado
+      maxUsageTime[app] = const Duration(minutes: 30);
+    }
+    if (_list.isNotEmpty) {
+      _list.forEach(
+        (element) {
+          maxUsageTime[element.packageName!] =
+              Duration(seconds: int.parse(element.dailyLimit!));
+        },
+      );
     }
   }
 
-  void setDefaultAppSelectable() async {
+  Future<void> setDefaultAppSelectable() async {
     List<ModelDbAllowedApps> listModelDbAllowedApps =
         await ApiDatabase.getAllowedApps();
     if (listModelDbAllowedApps.isNotEmpty) {
