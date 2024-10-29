@@ -134,13 +134,13 @@ class _StepFourState extends State<StepFour> {
                 'Seleccione las principales redes sociales que usa, el objetivo sera mantener un control de tiempo en cada una de las redes sociales',
                 textAlign: TextAlign.center,
               ),
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  color: Colors.red,
-                ),
-              )
+              // GestureDetector(
+              //   onTap: () {},
+              //   child: Container(
+              //     padding: EdgeInsets.all(20),
+              //     color: Colors.red,
+              //   ),
+              // )
             ],
           ),
         ],

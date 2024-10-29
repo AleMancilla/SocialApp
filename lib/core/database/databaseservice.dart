@@ -40,6 +40,17 @@ class DatabaseService {
     }
   }
 
+  static Future<void> deleteAllowedApp(String packageName) async {
+    try {
+      final result = await _channel.invokeMethod('deleteAllowedApp', {
+        'packageName': packageName,
+      });
+      print(result); // Muestra confirmación de eliminación o mensaje de error
+    } catch (e) {
+      print("Error al eliminar la aplicación permitida: $e");
+    }
+  }
+
   static Future<void> insertUsageLimit(
       int userId, int appId, int dailyLimit, int notificationInterval) async {
     try {

@@ -73,6 +73,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "shared_datab
         return db.insert("AllowedApps", null, values)
     }
 
+    fun deleteAllowedApp(packageName: String): Int {
+        val db = this.writableDatabase
+        return db.delete("AllowedApps", "package_name = ?", arrayOf(packageName))
+    }
+
     // Método para insertar límites de uso
     fun insertUsageLimit(userId: Int, appId: Int, dailyLimit: Int, notificationInterval: Int): Long {
         val db = this.writableDatabase

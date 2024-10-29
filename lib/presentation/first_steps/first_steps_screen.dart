@@ -1,6 +1,11 @@
+import 'dart:convert';
+
+import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wenia_assignment/core/database/api_database.dart';
 import 'package:wenia_assignment/core/database/databaseservice.dart';
+import 'package:wenia_assignment/core/database/models/model_db_allowed_apps.dart';
 import 'package:wenia_assignment/core/utils/custom_navigator.dart';
 import 'package:wenia_assignment/presentation/auth/auth_home_screen.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_cero.dart';
@@ -9,6 +14,7 @@ import 'package:wenia_assignment/presentation/first_steps/steps/step_one.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_tree.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_two.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/steps_controller.dart';
+import 'package:wenia_assignment/presentation/home/list_apps_controller.dart';
 
 class FirstStepsScreen extends StatefulWidget {
   @override
@@ -39,8 +45,8 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
               // await DatabaseService.insertAllowedApp(
               //     'com.whatsapp', 'WhatsApp', null);
 
-              await DatabaseService.insertUsageLimit(1, 1, 120,
-                  10); // Ejemplo: usuario ID 1, app ID 1, límite diario 120 minutos, intervalo de notificación 10 minutos
+              // await DatabaseService.insertUsageLimit(1, 1, 120,
+              //     10); // Ejemplo: usuario ID 1, app ID 1, límite diario 120 minutos, intervalo de notificación 10 minutos
             },
             // child: Text('Consulta'),
           ),
@@ -49,12 +55,18 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
             onPressed: () async {
               print(' ------ tap');
               // final users = await DatabaseService.getUsers();
-              // final response = await DatabaseService.getAllowedApps();
-              final response = await DatabaseService.getUsageLimits();
+              final response = await DatabaseService.getAllowedApps();
+              // final response = await DatabaseService.getUsageLimits();
+              // ApiDatabase.getAllowedApps();
+              // ModelDbAllowedApps? data =
+              //     await ApiDatabase.getSpecificAllowedApps('com.whatsapp');
               print(response);
             },
             // child: Text('Consulta'),
           ),
+          SizedBox(
+            height: 70,
+          )
         ],
       ),
       appBar: AppBar(
@@ -120,6 +132,74 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
           GestureDetector(
             onTap: () {
               print(' ---- _pageController.page ----- ${_pageController.page}');
+              if (_pageController.page == 3) {
+                final ListAppsController listAppscontroller = Get.find();
+
+                // listAppscontroller.filteredApps.forEach(
+                //   (element) {
+                //     bool isSelected = listAppscontroller.appsSelectable
+                //         .contains(element.packageName);
+
+                //     if (isSelected) {
+                //       ApiDatabase.insertAllowedApp(
+                //           package: element.packageName, name: element.appName);
+                //     }
+                //   },
+                // );
+
+                List<Application> selectedApps = listAppscontroller.apps
+                    .where((app) => listAppscontroller.appsSelectable
+                        .contains(app.packageName))
+                    .toList();
+
+                ApiDatabase.insertAllowedAppList(selectedApps);
+
+                _pageController.nextPage(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+                return;
+              }
+              if (_pageController.page == 4) {
+                final ListAppsController listAppscontroller = Get.find();
+
+                // listAppscontroller.filteredApps.forEach(
+                //   (element) {
+                //     bool isSelected = listAppscontroller.appsSelectable
+                //         .contains(element.packageName);
+
+                //     if (isSelected) {
+                //       ApiDatabase.insertAllowedApp(
+                //           package: element.packageName, name: element.appName);
+                //     }
+                //   },
+                // );
+
+                List<Application> selectedApps = listAppscontroller.apps
+                    .where((app) => listAppscontroller.appsSelectable
+                        .contains(app.packageName))
+                    .toList();
+
+                selectedApps.forEach(
+                  (element) {
+                    final app = element;
+                    final packageName = app.packageName;
+                    final appName = app.appName;
+                    final maxTime =
+                        listAppscontroller.maxUsageTime[packageName] ??
+                            Duration();
+                    ApiDatabase.insertUsageLimit(
+                        package: element.packageName,
+                        dailyLimit: maxTime.inMinutes);
+                  },
+                );
+
+                _pageController.nextPage(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+                return;
+              }
               if (_pageController.page == 4) {
                 CustomNavigator.push(context, AuthHomeScreen());
                 return;

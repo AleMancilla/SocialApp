@@ -72,6 +72,15 @@ class MainActivity: FlutterActivity() {
                         result.error("INSERT_ERROR", "Error al insertar la aplicación permitida", null)
                     }
                 }
+                "deleteAllowedApp" -> {
+                    val packageName = call.argument<String>("packageName") ?: ""
+                    val rowsDeleted = dbHelper.deleteAllowedApp(packageName)
+                    if (rowsDeleted > 0) {
+                        result.success("Aplicación permitida eliminada con éxito.")
+                    } else {
+                        result.error("DELETE_ERROR", "Error al eliminar la aplicación permitida o no encontrada.", null)
+                    }
+                }
                 "insertUsageLimit" -> {
                     val userId = call.argument<Int>("userId") ?: return@setMethodCallHandler result.error("INVALID_ARGS", "userId es requerido", null)
                     val appId = call.argument<Int>("appId") ?: return@setMethodCallHandler result.error("INVALID_ARGS", "appId es requerido", null)
