@@ -51,6 +51,8 @@ dependencies:
   overlay_pop_up: ^1.0.3
   package_info_plus:
   flutter_time_picker_spinner: 
+  sqflite: ^2.0.0+4
+  path: ^1.8.0
 
 
 dev_dependencies:

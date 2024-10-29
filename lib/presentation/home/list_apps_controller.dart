@@ -57,7 +57,7 @@ class ListAppsController extends GetxController {
       maxUsageTime.remove(package);
     } else {
       appsSelectable.add(package);
-      maxUsageTime[package] = Duration(hours: 1); // Tiempo predeterminado
+      maxUsageTime[package] = Duration(minutes: 30); // Tiempo predeterminado
     }
     sortAppsByUsage();
   }

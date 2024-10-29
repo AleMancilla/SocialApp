@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
 import 'package:overlay_pop_up/overlay_pop_up.dart';
+import 'package:wenia_assignment/core/database/databaseservice.dart';
+import 'package:wenia_assignment/core/database/opendatabase.dart';
 import 'package:wenia_assignment/core/utils/user_preferens.dart';
 import 'package:wenia_assignment/presentation/splash/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,6 +14,16 @@ import 'dart:async';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final db = await initOpenDatabase();
+  await DatabaseService.initDatabase(); // Inicializa la base de datos en Kotlin
+
+  // await DatabaseService.insertUser('JohnDoe', 'john.doe@example.com');
+  // await DatabaseService.insertAllowedApp('com.whatsapp', 'WhatsApp', null);
+  // await DatabaseService.insertUsageLimit(1, 1, 120,
+  //     10); // Ejemplo: usuario ID 1, app ID 1, límite diario 120 minutos, intervalo de notificación 10 minutos
+
+  // Ahora `db` está listo para operaciones de lectura/escritura.
   final prefs = UserPreferences();
   await prefs.initPreferences();
 

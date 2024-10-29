@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wenia_assignment/core/database/databaseservice.dart';
 import 'package:wenia_assignment/core/utils/custom_navigator.dart';
 import 'package:wenia_assignment/presentation/auth/auth_home_screen.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_cero.dart';
@@ -23,6 +24,39 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton.extended(
+            label: Text('insertar'),
+            onPressed: () async {
+              print(' ------ tap');
+              // final users = await DatabaseService.getUsers();
+
+              // await DatabaseService.insertUser(
+              //     'JohnDoe', 'john.doe@example.com');
+
+              // await DatabaseService.insertAllowedApp(
+              //     'com.whatsapp', 'WhatsApp', null);
+
+              await DatabaseService.insertUsageLimit(1, 1, 120,
+                  10); // Ejemplo: usuario ID 1, app ID 1, límite diario 120 minutos, intervalo de notificación 10 minutos
+            },
+            // child: Text('Consulta'),
+          ),
+          FloatingActionButton.extended(
+            label: Text('Consulta'),
+            onPressed: () async {
+              print(' ------ tap');
+              // final users = await DatabaseService.getUsers();
+              // final response = await DatabaseService.getAllowedApps();
+              final response = await DatabaseService.getUsageLimits();
+              print(response);
+            },
+            // child: Text('Consulta'),
+          ),
+        ],
+      ),
       appBar: AppBar(
         title: Text('Social Stop'),
       ),
