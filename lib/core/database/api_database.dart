@@ -68,26 +68,31 @@ class ApiDatabase {
         ModelDbUsageLimits? previous =
             await getSpecificUsageLimits(element.packageName);
         print('previous ============= > $previous');
-        if (previous == null) {
-          final app = element;
-          final packageName = app.packageName;
-          final appName = app.appName;
-          Duration maxTime =
-              maxUsageTime[packageName] ?? Duration(seconds: 120);
-
-          ModelDbAllowedApps? data =
-              await ApiDatabase.getSpecificAllowedApps(packageName);
-
-          print(' ---- -usage INSERT insertUsageLimit');
-
-          await DatabaseService.insertUsageLimit(
-            1,
-            data?.appId ?? 1,
-            maxTime.inSeconds,
-            notificationInterval ?? 120,
-            data!.packageName!,
-          );
+        if (previous != null) {
+          DatabaseService.deleteUsageLimits(element.packageName!);
         }
+        // if (previous == null) {
+        final app = element;
+        final packageName = app.packageName;
+        final appName = app.appName;
+        Duration maxTime = maxUsageTime[packageName] ?? Duration(seconds: 120);
+
+        ModelDbAllowedApps? data =
+            await ApiDatabase.getSpecificAllowedApps(packageName);
+
+        print(' ---- -usage INSERT insertUsageLimit');
+
+        await DatabaseService.insertUsageLimit(
+          1,
+          data?.appId ?? 1,
+          maxTime.inSeconds,
+          notificationInterval ?? 120,
+          data!.packageName!,
+        );
+        // }else{
+        //   DatabaseService.deleteUsageLimits(element.packageName!);
+
+        // }
       },
     );
   }
