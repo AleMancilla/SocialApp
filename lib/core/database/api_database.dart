@@ -65,10 +65,10 @@ class ApiDatabase {
     print(selectedApps);
     selectedApps.forEach(
       (element) async {
-        ModelDbAllowedApps? previous =
-            await getSpecificAllowedApps(element.packageName);
+        ModelDbUsageLimits? previous =
+            await getSpecificUsageLimits(element.packageName);
         print('previous ============= > $previous');
-        if (previous != null) {
+        if (previous == null) {
           final app = element;
           final packageName = app.packageName;
           final appName = app.appName;
@@ -139,6 +139,26 @@ class ApiDatabase {
     );
 
     return responseModelAllowed;
+  }
+
+  static Future<ModelDbUsageLimits?> getSpecificUsageLimits(
+      String package) async {
+    // return await DatabaseService.getAllowedApps();
+    List<Map<String, dynamic>> response =
+        await DatabaseService.getUsageLimits();
+
+    List<ModelDbUsageLimits> listModelDbAllowedApps = response
+        .map(
+          (e) => ModelDbUsageLimits.fromJson(e),
+        )
+        .toList();
+
+    ModelDbUsageLimits? responseUsageLimits =
+        listModelDbAllowedApps.firstWhereOrNull(
+      (element) => package == element.packageName,
+    );
+
+    return responseUsageLimits;
   }
 
   static Future<List<ModelDbUsageLimits>> getUsageLimits() async {
