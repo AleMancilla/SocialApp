@@ -35,7 +35,9 @@ class AppMonitorService : Service() {
     private var totalUsageTime = 0 // Tiempo de uso total en segundos
     private var isScreenOn = true // Estado de la pantalla
     private var hasShownLimitPopup = false // Variable para controlar si el popup ya fue mostrado
-    private val usageLimitInSeconds = 15 * 60 // 15 minutos
+    // private val usageLimitInSeconds = 15 * 60 // 15 minutos
+    private var usageLimits: MutableMap<String, Int> = mutableMapOf() // Mapa para los límites de uso por paquete
+
     private var remainingExtraTime = 0 // Tiempo extra restante en segundos
     private var extraTimePerApp = mutableMapOf<String, Int>() // Mapa para el tiempo extra por aplicación
 
@@ -90,10 +92,14 @@ class AppMonitorService : Service() {
     // Función para cargar los nombres de paquetes desde la base de datos
     private fun loadAllowedPackagesFromDatabase() {
         val dbHelper = DatabaseHelper(this)
-        val usageLimits = dbHelper.getAllUsageLimits() // Obtener todos los UsageLimit
+        val usageLimitsFromDb = dbHelper.getAllUsageLimits() // Obtener todos los UsageLimit
 
-        // Extraer packageName de cada UsageLimit y asignarlo a allowedPackages
-        allowedPackages = usageLimits.map { it.packageName } // Asegúrate de que packageName se utiliza correctamente
+        allowedPackages = usageLimitsFromDb.map { it.packageName } // Asignar los nombres de los paquetes
+
+        // Llenar el mapa de límites de uso
+        usageLimitsFromDb.forEach {
+            usageLimits[it.packageName] = it.limitTime // Asigna el límite a su paquete correspondiente
+        }
 
         Log.d("___________________AppMonitorService", "Allowed packages loaded: $allowedPackages")
     }
@@ -147,10 +153,12 @@ class AppMonitorService : Service() {
         }
     }
 
-    
     private fun startTracking(packageName: String) {
         totalUsageTime = getAppUsageTime(packageName)
         Log.d("AppMonitorService", "App abierta: $packageName - Tiempo acumulado: ${formatTime(totalUsageTime)}")
+
+        // Obtiene el límite de uso para este paquete específico
+        val usageLimitInSeconds = usageLimits[packageName] ?: 15 * 60 // Usa 15 minutos como valor predeterminado si no se encuentra
 
         appTimerRunnable = object : Runnable {
             override fun run() {
@@ -181,6 +189,7 @@ class AppMonitorService : Service() {
         }
         appTimerRunnable?.let { handler.post(it) }
     }
+
 
     private fun stopTracking(packageName: String?) {
         appTimerRunnable?.let { handler.removeCallbacks(it) }
