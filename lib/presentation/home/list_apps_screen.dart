@@ -1,6 +1,7 @@
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wenia_assignment/core/database/api_database.dart';
 import 'package:wenia_assignment/core/theme/custom_colors.dart';
 import 'package:wenia_assignment/presentation/home/controller/home_controller.dart';
 import 'package:wenia_assignment/presentation/home/list_apps_controller.dart';
@@ -106,6 +107,51 @@ class _ListAppsScreenState extends State<ListAppsScreen> {
                   ),
                 ),
               ),
+              !edit
+                  ? GestureDetector(
+                      onTap: () {
+                        edit = true;
+                        setState(() {});
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.blueGrey[900],
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        child: Text(
+                          'Editar ✎',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    )
+                  : GestureDetector(
+                      onTap: () async {
+                        edit = false;
+                        setState(() {});
+                        List<Application> selectedApps = listAppscontroller.apps
+                            .where((app) => listAppscontroller.appsSelectable
+                                .contains(app.packageName))
+                            .toList();
+
+                        ApiDatabase.insertAllowedAppList(selectedApps);
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.green[900],
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        child: Text(
+                          'Guardar ✎',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    )
             ],
           );
         }),

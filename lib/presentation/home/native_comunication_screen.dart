@@ -77,28 +77,7 @@ class _NativeCommunicationScreenState extends State<NativeCommunicationScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Mensaje desde Kotlin:',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 10),
-            Text(
-              _messageFromKotlin,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: sendMessageToKotlin,
-              child: Text('Enviar mensaje a Kotlin'),
-            ),
-            SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: showFloatingWidget,
-              child: Text('showFloatingWidget'),
-            ),
-          ],
+          children: [],
         ),
       ),
     );

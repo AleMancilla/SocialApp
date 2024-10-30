@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.compare_arrows_rounded),
-            label: 'Desafios',
+            label: 'Tiempos',
           ),
         ],
       ),
