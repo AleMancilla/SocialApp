@@ -2,6 +2,7 @@ import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:get/get.dart';
+import 'package:wenia_assignment/core/database/api_database.dart';
 import 'package:wenia_assignment/presentation/home/list_apps_controller.dart';
 import 'overlay_controller.dart';
 
@@ -15,6 +16,7 @@ class PrincipalOverlay extends StatefulWidget {
 class _PrincipalOverlayState extends State<PrincipalOverlay> {
   final OverlayController controller = Get.put(OverlayController());
   final ListAppsController listAppscontroller = Get.find();
+  bool edit = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +43,14 @@ class _PrincipalOverlayState extends State<PrincipalOverlay> {
                             Duration();
 
                     return GestureDetector(
-                      onTap: () async {
-                        // Editar el tiempo máximo de uso con un selector de tiempo
-                        await _showTimePicker(
-                            context, packageName, maxTime, app.appName);
-                        setState(() {});
-                      },
+                      onTap: edit
+                          ? () async {
+                              // Editar el tiempo máximo de uso con un selector de tiempo
+                              await _showTimePicker(
+                                  context, packageName, maxTime, app.appName);
+                              setState(() {});
+                            }
+                          : null,
                       child: Container(
                         margin: EdgeInsets.only(bottom: 5),
                         decoration: BoxDecoration(
@@ -107,7 +111,7 @@ class _PrincipalOverlayState extends State<PrincipalOverlay> {
                               ),
                             ),
                             SizedBox(width: 10),
-                            Icon(Icons.edit),
+                            if (edit) Icon(Icons.edit),
                           ],
                         ),
                       ),
@@ -117,30 +121,52 @@ class _PrincipalOverlayState extends State<PrincipalOverlay> {
               },
             ),
           ),
-          Column(
-            children: [
-              Text(
-                'Tiempos de uso',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                  fontFamily: 'paradice',
-                ),
-              ),
-              SizedBox(height: 20),
-              Text(
-                'Seleccione las principales redes sociales que usa, el objetivo sera mantener un control de tiempo en cada una de las redes sociales',
-                textAlign: TextAlign.center,
-              ),
-              // GestureDetector(
-              //   onTap: () {},
-              //   child: Container(
-              //     padding: EdgeInsets.all(20),
-              //     color: Colors.red,
-              //   ),
-              // )
-            ],
-          ),
+          !edit
+              ? GestureDetector(
+                  onTap: () {
+                    edit = true;
+                    setState(() {});
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.blueGrey[900],
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: Text(
+                      'Editar ✎',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                )
+              : GestureDetector(
+                  onTap: () {
+                    edit = false;
+                    setState(() {});
+
+                    final ListAppsController listAppscontroller = Get.find();
+                    List<Application> selectedApps = listAppscontroller.apps
+                        .where((app) => listAppscontroller.appsSelectable
+                            .contains(app.packageName))
+                        .toList();
+
+                    ApiDatabase.insertUsageLimitList(
+                        selectedApps, listAppscontroller.maxUsageTime);
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.green[900],
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: Text(
+                      'Guardar ✎',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                )
         ],
       ),
     );
@@ -164,20 +190,23 @@ class _PrincipalOverlayState extends State<PrincipalOverlay> {
               children: [
                 Text(
                     'Tiempo anterior ${listAppscontroller.formatDuration(initialTime)}, seleccione un nuevo tiempo maximo de uso para esta app'),
-                TimePickerSpinner(
-                  time: DateTime(0, 1, 1, hours, minutes, seconds),
-                  is24HourMode: true,
-                  isForce2Digits: true,
-                  isShowSeconds: true,
-                  normalTextStyle: TextStyle(fontSize: 20, color: Colors.black),
-                  highlightedTextStyle:
-                      TextStyle(fontSize: 24, color: Colors.blue),
-                  spacing: 20,
-                  onTimeChange: (time) {
-                    hours = time.hour;
-                    minutes = time.minute;
-                    seconds = time.second;
-                  },
+                Expanded(
+                  child: TimePickerSpinner(
+                    time: DateTime(0, 1, 1, hours, minutes, seconds),
+                    is24HourMode: true,
+                    isForce2Digits: true,
+                    isShowSeconds: true,
+                    normalTextStyle:
+                        TextStyle(fontSize: 20, color: Colors.black),
+                    highlightedTextStyle:
+                        TextStyle(fontSize: 24, color: Colors.blue),
+                    spacing: 20,
+                    onTimeChange: (time) {
+                      hours = time.hour;
+                      minutes = time.minute;
+                      seconds = time.second;
+                    },
+                  ),
                 ),
               ],
             ),

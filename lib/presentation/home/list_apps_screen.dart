@@ -15,6 +15,8 @@ class _ListAppsScreenState extends State<ListAppsScreen> {
 
   final ListAppsController listAppscontroller = Get.find();
 
+  bool edit = false;
+
   @override
   Widget build(BuildContext context) {
     print(homecontroller.listAppUsageInfo);
@@ -65,18 +67,23 @@ class _ListAppsScreenState extends State<ListAppsScreen> {
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 0),
                               dense: true,
-                              onTap: () {
-                                listAppscontroller.selectApp(app.packageName);
-                                setState(() {});
-                              },
-                              trailing: Icon(
-                                isSelected
-                                    ? Icons.check_box
-                                    : Icons.check_box_outline_blank,
-                                color: isSelected
-                                    ? CustomColors.primary3
-                                    : CustomColors.background3,
-                              ),
+                              onTap: edit
+                                  ? () {
+                                      listAppscontroller
+                                          .selectApp(app.packageName);
+                                      setState(() {});
+                                    }
+                                  : null,
+                              trailing: edit
+                                  ? Icon(
+                                      isSelected
+                                          ? Icons.check_box
+                                          : Icons.check_box_outline_blank,
+                                      color: isSelected
+                                          ? CustomColors.primary3
+                                          : CustomColors.background3,
+                                    )
+                                  : null,
                               leading: app is ApplicationWithIcon
                                   ? Image.memory(
                                       app.icon,

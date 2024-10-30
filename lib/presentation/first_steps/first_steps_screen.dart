@@ -162,19 +162,6 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
               }
               if (_pageController.page == 4) {
                 final ListAppsController listAppscontroller = Get.find();
-
-                // listAppscontroller.filteredApps.forEach(
-                //   (element) {
-                //     bool isSelected = listAppscontroller.appsSelectable
-                //         .contains(element.packageName);
-
-                //     if (isSelected) {
-                //       ApiDatabase.insertAllowedApp(
-                //           package: element.packageName, name: element.appName);
-                //     }
-                //   },
-                // );
-
                 List<Application> selectedApps = listAppscontroller.apps
                     .where((app) => listAppscontroller.appsSelectable
                         .contains(app.packageName))
