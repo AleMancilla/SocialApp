@@ -189,7 +189,7 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
                 );
                 return;
               }
-              if (_pageController.page == 4) {
+              if (_pageController.page == 5) {
                 CustomNavigator.push(context, AuthHomeScreen());
                 return;
               }

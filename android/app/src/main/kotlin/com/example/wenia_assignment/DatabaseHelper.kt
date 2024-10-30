@@ -1,10 +1,11 @@
 package com.alecodeando.weniatest
 
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.content.ContentValues
 import android.util.Log
+import android.database.sqlite.SQLiteDatabase
+
 
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "shared_database_5.db", null, 5) {
@@ -161,4 +162,25 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "shared_datab
         return users
     }
 
+
+    // Función para obtener todos los registros de "UsageLimit" en AppMonitorService
+    fun getAllUsageLimits(): List<UsageLimit> {
+        val usageLimits = mutableListOf<UsageLimit>()
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM UsageLimits", null)
+        
+        if (cursor.moveToFirst()) {
+            do {
+                val limitId = cursor.getInt(cursor.getColumnIndexOrThrow("limit_id"))
+                val packageName = cursor.getString(cursor.getColumnIndexOrThrow("package_name"))
+                val limitTime = cursor.getInt(cursor.getColumnIndexOrThrow("daily_limit")) // Cambiado a daily_limit
+                usageLimits.add(UsageLimit(limitId, packageName, limitTime))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return usageLimits
+    }
+
+
 }
+

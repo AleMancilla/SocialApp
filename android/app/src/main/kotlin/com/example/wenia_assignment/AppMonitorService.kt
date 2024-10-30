@@ -22,6 +22,8 @@ import android.view.WindowManager
 import android.widget.Button
 import android.os.VibrationEffect
 import android.os.Vibrator
+import com.alecodeando.weniatest.DatabaseHelper
+
 
 class AppMonitorService : Service() {
 
@@ -34,19 +36,20 @@ class AppMonitorService : Service() {
     private var isScreenOn = true // Estado de la pantalla
     private var hasShownLimitPopup = false // Variable para controlar si el popup ya fue mostrado
     private val usageLimitInSeconds = 15 * 60 // 15 minutos
-
     private var remainingExtraTime = 0 // Tiempo extra restante en segundos
     private var extraTimePerApp = mutableMapOf<String, Int>() // Mapa para el tiempo extra por aplicación
 
-
-
     // Lista de paquetes permitidos
-    private val allowedPackages = listOf(
-        "com.whatsapp",       // WhatsApp
-        "com.facebook.katana", // Facebook
-        "com.instagram.android", // Instagram
-        // Agrega más paquetes según lo necesites
-    )
+    private var allowedPackages: List<String> = emptyList()
+
+
+    // // Lista de paquetes permitidos
+    // private val allowedPackages = listOf(
+    //     "com.whatsapp",       // WhatsApp
+    //     "com.facebook.katana", // Facebook
+    //     "com.instagram.android", // Instagram
+    //     // Agrega más paquetes según lo necesites
+    // )
 
     // BroadcastReceiver para manejar el estado de la pantalla
     private val screenStateReceiver = object : BroadcastReceiver() {
@@ -66,9 +69,13 @@ class AppMonitorService : Service() {
         }
     }
 
-    override fun onCreate() {
+     override fun onCreate() {
+        Log.d("___________________2AppMonitorService", "Allowed packages loaded: XS")
         super.onCreate()
         usageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+
+        // Inicializa allowedPackages con los datos de la base de datos
+        loadAllowedPackagesFromDatabase()
 
         // Registrar el BroadcastReceiver para los eventos de pantalla
         val filter = IntentFilter(Intent.ACTION_SCREEN_ON).apply {
@@ -77,6 +84,18 @@ class AppMonitorService : Service() {
         registerReceiver(screenStateReceiver, filter)
 
         startMonitoring()
+    }
+
+
+    // Función para cargar los nombres de paquetes desde la base de datos
+    private fun loadAllowedPackagesFromDatabase() {
+        val dbHelper = DatabaseHelper(this)
+        val usageLimits = dbHelper.getAllUsageLimits() // Obtener todos los UsageLimit
+
+        // Extraer packageName de cada UsageLimit y asignarlo a allowedPackages
+        allowedPackages = usageLimits.map { it.packageName } // Asegúrate de que packageName se utiliza correctamente
+
+        Log.d("___________________AppMonitorService", "Allowed packages loaded: $allowedPackages")
     }
 
     private fun startMonitoring() {
@@ -291,4 +310,14 @@ class AppMonitorService : Service() {
         }
     }
 
+
+
+
 }
+
+
+data class UsageLimit(
+    val limitId: Int,
+    val packageName: String,
+    val limitTime: Int
+)
