@@ -45,7 +45,7 @@ class ApiDatabase {
     );
   }
 
-  static insertUsageLimitList(
+  static Future insertUsageLimitList(
       List<Application> selectedApps, Map<String, Duration> maxUsageTime,
       {int? notificationInterval = 120}) async {
     // await DatabaseService.insertAllowedApp('com.whatsapp', 'WhatsApp', null);

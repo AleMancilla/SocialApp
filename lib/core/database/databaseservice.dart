@@ -4,6 +4,15 @@ class DatabaseService {
   static const MethodChannel _channel =
       MethodChannel('com.example.wenia_assignment/database');
 
+  static Future<void> updateUsageLimits() async {
+    try {
+      await _channel.invokeMethod('updateUsageLimits');
+      print("Usage limits updated successfully");
+    } catch (e) {
+      print("Failed to update usage limits: $e");
+    }
+  }
+
   Future<void> _refreshUsageLimits() async {
     try {
       await _channel.invokeMethod('refreshUsageLimits');

@@ -176,6 +176,13 @@ class MainActivity: FlutterActivity() {
                     val users = getUsers() // Asegúrate de que este método exista
                     result.success(users)
                 }
+               "updateUsageLimits" -> {
+            Log.e("Error in channel", "ENTROOOOOOOOOOOOOOOOOOO XD")
+
+                    val appMonitorServiceIntent = Intent(this, AppMonitorService::class.java)
+                    startService(appMonitorServiceIntent)
+                    result.success("Usage limits updated in service.")
+                }
                 else -> {
                     result.notImplemented()
                 }

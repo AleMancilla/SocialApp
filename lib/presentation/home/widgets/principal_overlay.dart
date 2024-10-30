@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:get/get.dart';
 import 'package:wenia_assignment/core/database/api_database.dart';
+import 'package:wenia_assignment/core/database/databaseservice.dart';
 import 'package:wenia_assignment/presentation/home/list_apps_controller.dart';
 import 'overlay_controller.dart';
 
@@ -141,7 +142,7 @@ class _PrincipalOverlayState extends State<PrincipalOverlay> {
                   ),
                 )
               : GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     edit = false;
                     setState(() {});
 
@@ -151,8 +152,10 @@ class _PrincipalOverlayState extends State<PrincipalOverlay> {
                             .contains(app.packageName))
                         .toList();
 
-                    ApiDatabase.insertUsageLimitList(
+                    await ApiDatabase.insertUsageLimitList(
                         selectedApps, listAppscontroller.maxUsageTime);
+
+                    DatabaseService.updateUsageLimits();
                   },
                   child: Container(
                     margin: EdgeInsets.only(bottom: 10),

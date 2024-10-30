@@ -104,6 +104,23 @@ class AppMonitorService : Service() {
         Log.d("___________________AppMonitorService", "Allowed packages loaded: $allowedPackages")
     }
 
+    fun updateUsageLimits(newLimits: Map<String, Int>) {
+        // usageLimits.clear()
+        // usageLimits.putAll(newLimits)
+        loadAllowedPackagesFromDatabase()
+        Log.d(" ......................... AppMonitorService", "Usage limits updated: $usageLimits")
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        intent?.let {
+            val newLimits = it.getSerializableExtra("usage_limits") as? Map<String, Int>
+            if (newLimits != null) {
+                updateUsageLimits(newLimits)
+            }
+        }
+        return super.onStartCommand(intent, flags, startId)
+    }
+
     private fun startMonitoring() {
         monitorRunnable = object : Runnable {
             override fun run() {
