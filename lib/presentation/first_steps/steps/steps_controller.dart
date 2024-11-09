@@ -1,7 +1,9 @@
 import 'package:app_usage/app_usage.dart';
 import 'package:easy_permission_validator/easy_permission_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+// import 'package:flutter_accessibility_service/flutter_accessibility_service.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:system_alert_window/system_alert_window.dart';
@@ -9,6 +11,7 @@ import 'package:system_alert_window/system_alert_window.dart';
 class StepsController extends GetxController {
   RxBool permisionUsageIsComplete = false.obs;
   RxBool permisionSuperPosicionComplete = false.obs;
+  RxBool permisionAccesibility = false.obs;
 
   // @override
   // void onInit() async {
@@ -40,6 +43,31 @@ class StepsController extends GetxController {
       // Do something;
       permisionSuperPosicionComplete.value = result;
       print(result);
+    }
+  }
+
+  permisionAccesibilidad(BuildContext context) async {
+    print(' ---- entro aqui');
+    final bool status = await checkAccessibility();
+    print(' ---- respuesta aqui $status');
+    if (!status) {
+      final bool request = await checkAccessibility();
+      permisionAccesibility.value = request;
+    } else {
+      permisionAccesibility.value = true;
+    }
+  }
+
+  static const platform = MethodChannel('com.example.timeService');
+
+  static Future<bool> checkAccessibility() async {
+    try {
+      // final bool isAccessibilityEnabled =
+      await platform.invokeMethod('startService');
+      return true;
+    } on PlatformException catch (e) {
+      print("Error al verificar la accesibilidad: ${e.message}");
+      return false;
     }
   }
 

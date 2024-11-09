@@ -4,8 +4,6 @@ import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wenia_assignment/core/database/api_database.dart';
-import 'package:wenia_assignment/core/database/databaseservice.dart';
-import 'package:wenia_assignment/core/database/models/model_db_allowed_apps.dart';
 import 'package:wenia_assignment/core/utils/custom_navigator.dart';
 import 'package:wenia_assignment/presentation/auth/auth_home_screen.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_cero.dart';
@@ -13,7 +11,9 @@ import 'package:wenia_assignment/presentation/first_steps/steps/step_four.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_one.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_tree.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/step_two.dart';
+import 'package:wenia_assignment/presentation/first_steps/steps/step_two_dot_two.dart';
 import 'package:wenia_assignment/presentation/first_steps/steps/steps_controller.dart';
+import 'package:wenia_assignment/presentation/home/home_screen.dart';
 import 'package:wenia_assignment/presentation/home/list_apps_controller.dart';
 
 class FirstStepsScreen extends StatefulWidget {
@@ -25,50 +25,50 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
   final PageController _pageController = PageController();
   StepsController controller = Get.put(StepsController());
   int _currentStep = 0;
-  final int _totalSteps = 5;
+  final int _totalSteps = 6;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FloatingActionButton.extended(
-            label: Text('insertar'),
-            onPressed: () async {
-              print(' ------ tap');
-              // final users = await DatabaseService.getUsers();
+      // floatingActionButton: Column(
+      //   mainAxisSize: MainAxisSize.min,
+      //   children: [
+      //     FloatingActionButton.extended(
+      //       label: Text('insertar'),
+      //       onPressed: () async {
+      //         print(' ------ tap');
+      //         // final users = await DatabaseService.getUsers();
 
-              // await DatabaseService.insertUser(
-              //     'JohnDoe', 'john.doe@example.com');
+      //         // await DatabaseService.insertUser(
+      //         //     'JohnDoe', 'john.doe@example.com');
 
-              // await DatabaseService.insertAllowedApp(
-              //     'com.whatsapp', 'WhatsApp', null);
+      //         // await DatabaseService.insertAllowedApp(
+      //         //     'com.whatsapp', 'WhatsApp', null);
 
-              // await DatabaseService.insertUsageLimit(1, 1, 120,
-              //     10); // Ejemplo: usuario ID 1, app ID 1, límite diario 120 minutos, intervalo de notificación 10 minutos
-            },
-            // child: Text('Consulta'),
-          ),
-          FloatingActionButton.extended(
-            label: Text('Consulta'),
-            onPressed: () async {
-              print(' ------ tap');
-              // final users = await DatabaseService.getUsers();
-              // final response = await DatabaseService.getAllowedApps();
-              final response = await DatabaseService.getUsageLimits();
-              // ApiDatabase.getAllowedApps();
-              // ModelDbAllowedApps? data =
-              //     await ApiDatabase.getSpecificAllowedApps('com.whatsapp');
-              print(jsonEncode(response));
-            },
-            // child: Text('Consulta'),
-          ),
-          SizedBox(
-            height: 70,
-          )
-        ],
-      ),
+      //         // await DatabaseService.insertUsageLimit(1, 1, 120,
+      //         //     10); // Ejemplo: usuario ID 1, app ID 1, límite diario 120 minutos, intervalo de notificación 10 minutos
+      //       },
+      //       // child: Text('Consulta'),
+      //     ),
+      //     FloatingActionButton.extended(
+      //       label: Text('Consulta'),
+      //       onPressed: () async {
+      //         print(' ------ tap');
+      //         // final users = await DatabaseService.getUsers();
+      //         // final response = await DatabaseService.getAllowedApps();
+      //         final response = await DatabaseService.getUsageLimits();
+      //         // ApiDatabase.getAllowedApps();
+      //         // ModelDbAllowedApps? data =
+      //         //     await ApiDatabase.getSpecificAllowedApps('com.whatsapp');
+      //         print(jsonEncode(response));
+      //       },
+      //       // child: Text('Consulta'),
+      //     ),
+      //     SizedBox(
+      //       height: 70,
+      //     )
+      //   ],
+      // ),
       appBar: AppBar(
         title: Text('Social Stop'),
       ),
@@ -88,6 +88,7 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
                 StepTwo(),
                 StepTree(),
                 StepFour(),
+                StepTwoDotTwo(),
                 Center(child: Text('Bienvenido')),
               ],
             ),
@@ -132,20 +133,8 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
           GestureDetector(
             onTap: () {
               print(' ---- _pageController.page ----- ${_pageController.page}');
-              if (_pageController.page == 3) {
+              if (_pageController.page == 4) {
                 final ListAppsController listAppscontroller = Get.find();
-
-                // listAppscontroller.filteredApps.forEach(
-                //   (element) {
-                //     bool isSelected = listAppscontroller.appsSelectable
-                //         .contains(element.packageName);
-
-                //     if (isSelected) {
-                //       ApiDatabase.insertAllowedApp(
-                //           package: element.packageName, name: element.appName);
-                //     }
-                //   },
-                // );
 
                 List<Application> selectedApps = listAppscontroller.apps
                     .where((app) => listAppscontroller.appsSelectable
@@ -160,7 +149,7 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
                 );
                 return;
               }
-              if (_pageController.page == 4) {
+              if (_pageController.page == 5) {
                 final ListAppsController listAppscontroller = Get.find();
                 List<Application> selectedApps = listAppscontroller.apps
                     .where((app) => listAppscontroller.appsSelectable
@@ -176,8 +165,9 @@ class _FirstStepsScreenState extends State<FirstStepsScreen> {
                 );
                 return;
               }
-              if (_pageController.page == 5) {
+              if (_pageController.page == 6) {
                 CustomNavigator.push(context, AuthHomeScreen());
+                // CustomNavigator.push(context, AuthHomeScreen());
                 return;
               }
               _pageController.nextPage(

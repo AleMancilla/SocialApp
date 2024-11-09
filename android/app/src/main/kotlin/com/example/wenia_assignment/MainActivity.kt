@@ -28,6 +28,10 @@ import io.flutter.embedding.engine.FlutterEngine
 import android.graphics.PixelFormat
 import android.view.Gravity
 
+import android.accessibilityservice.AccessibilityServiceInfo
+import android.view.accessibility.AccessibilityManager
+
+
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "com.alecodeando/native"
     private val CHANNELTIMESERVICE = "com.example.timeService"
@@ -149,7 +153,6 @@ class MainActivity: FlutterActivity() {
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNELTIMESERVICE).setMethodCallHandler { call, result ->
             if (call.method == "startService") {
-                // startBackgroundTimeService(this)
                 openAccessibilitySettings(this)
                 result.success("Service started")
             } else {
@@ -189,7 +192,6 @@ class MainActivity: FlutterActivity() {
             }
         }
     }
-
 
     private fun getUsers(): List<Map<String, Any>> {
         return dbHelper.getUsers() // Asegúrate de que este método esté bien implementado en DatabaseHelper

@@ -4,6 +4,7 @@ import 'package:get/route_manager.dart';
 import 'package:wenia_assignment/core/utils/custom_navigator.dart';
 import 'package:wenia_assignment/presentation/auth/controller/auth_controller.dart';
 import 'package:wenia_assignment/presentation/auth/forgot_password_screen.dart';
+import 'package:wenia_assignment/presentation/home/home_screen.dart';
 import 'package:wenia_assignment/presentation/widgets/custom_text_file.dart';
 
 class LoginFormSection extends StatefulWidget {
@@ -78,6 +79,16 @@ class _LoginFormSectionState extends State<LoginFormSection> {
                 },
                 child: Text(
                   'Olvidaste tu contraseña?',
+                  textAlign: TextAlign.right,
+                ),
+              ),
+              SizedBox(height: 10),
+              TextButton(
+                onPressed: () {
+                  CustomNavigator.push(context, HomeScreen());
+                },
+                child: Text(
+                  'Entrar como invitado',
                   textAlign: TextAlign.right,
                 ),
               ),
