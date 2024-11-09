@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:wenia_assignment/core/theme/custom_colors.dart';
 import 'package:wenia_assignment/core/utils/custom_navigator.dart';
 import 'package:wenia_assignment/presentation/home/controller/home_controller.dart';
-import 'package:wenia_assignment/presentation/home/widgets/compare_prices_screen.dart';
-import 'package:wenia_assignment/presentation/home/widgets/cripto_info_screen.dart';
-import 'package:wenia_assignment/presentation/home/widgets/favorites_screen.dart';
+import 'package:wenia_assignment/presentation/home/list_apps_screen.dart';
+import 'package:wenia_assignment/presentation/home/native_comunication_screen.dart';
+import 'package:wenia_assignment/presentation/home/widgets/principal_overlay.dart';
 import 'package:wenia_assignment/presentation/profile/edit_profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,9 +21,9 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    CriptoInfoScreen(),
-    FavoritesScreen(),
-    ComparePricesScreen(),
+    ListAppsScreen(),
+    NativeCommunicationScreen(),
+    PrincipalOverlay(),
   ];
 
   void _onTabTapped(int index) {
@@ -50,10 +50,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                       child: Center(
                           child: Text(
-                    'WENIA',
+                    'Social Stop',
                     style: TextStyle(
                       fontSize: 22,
-                      letterSpacing: 15,
+                      letterSpacing: 5,
                     ),
                   ))),
                   InkWell(
@@ -82,15 +82,15 @@ class _HomeScreenState extends State<HomeScreen> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            label: 'Criptos',
+            label: 'Tablero',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            label: 'Favorites',
+            icon: Icon(Icons.info),
+            label: 'Informes',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.compare_arrows_rounded),
-            label: 'VS',
+            label: 'Tiempos',
           ),
         ],
       ),

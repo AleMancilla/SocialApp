@@ -12,11 +12,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter an email';
+      return 'Por favor ingrese un correo';
     }
     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
     if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email';
+      return 'Por favor ingrese un correo valido';
     }
     return null;
   }
@@ -50,7 +50,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           child: Column(
             children: [
               Text(
-                'Enter your email to reset your password',
+                'Ingrese su correo para reestablecer su contraseña',
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 20),
@@ -65,7 +65,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _sendPasswordResetEmail,
-                child: Text('Send Reset Link'),
+                child: Text('Solicitar reestablecimiento'),
               ),
             ],
           ),

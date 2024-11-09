@@ -43,8 +43,8 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 40),
               alignment: Alignment.center,
-              width: sizeScreen.width / 2,
-              height: sizeScreen.width / 2,
+              width: sizeScreen.width / 1.3,
+              height: sizeScreen.width / 1.3,
               child: Hero(
                 tag: 'imageSplash',
                 // child: SvgPicture.asset(
@@ -75,13 +75,12 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> {
                             ? FontWeight.bold
                             : FontWeight.normal,
                         color: _selectedPage == 0
-                            ? CustomColors.background3
+                            ? CustomColors.background2
                             : CustomColors.background1,
                       ),
                       child: const Text(
-                        'LOGIN',
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
+                        'Inicia Sesion',
+                        style: TextStyle(fontSize: 24),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -97,11 +96,11 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> {
                             ? FontWeight.bold
                             : FontWeight.normal,
                         color: _selectedPage == 1
-                            ? CustomColors.background3
+                            ? CustomColors.background2
                             : CustomColors.background1,
                       ),
                       child: const Text(
-                        'SIGNUP',
+                        'Registrate',
                         style: TextStyle(fontSize: 24),
                         textAlign: TextAlign.center,
                       ),

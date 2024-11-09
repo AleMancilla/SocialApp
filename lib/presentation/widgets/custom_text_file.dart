@@ -46,16 +46,17 @@ class _CustomTextFileState extends State<CustomTextFile> {
         onChanged: widget.onChanged,
         onTap: widget.isCalendar ? () => _selectDate(context) : null,
         maxLines: !widget.isSecret ? widget.maxLines : 1,
+        style: TextStyle(color: Colors.blueGrey[900]),
         decoration: InputDecoration(
           labelText: widget.labelText,
           // floatingLabelBehavior: FloatingLabelBehavior.always,
           errorText: widget.validation ?? null,
           labelStyle: TextStyle(
-              color: CustomColors.background3), // Color del texto del label
+              color: CustomColors.background2), // Color del texto del label
           hintText: widget
               .hintText, // Texto que se muestra cuando el TextField está vacío
           hintStyle: TextStyle(
-              color: CustomColors.background3), // Color del texto de sugerencia
+              color: CustomColors.background2), // Color del texto de sugerencia
           prefixIcon: widget
               .prefixIcon, // Icono que se muestra antes del texto del input
           suffixIcon: getSufix(),

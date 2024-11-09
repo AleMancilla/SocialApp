@@ -37,34 +37,34 @@ class AuthController extends GetxController {
   RxBool isAdult = false.obs;
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter an email';
+      return 'Por favor ingrese un correo';
     }
     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
     if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email';
+      return 'Por favor ingrese un correo valido';
     }
     return null;
   }
 
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter a password';
+      return 'Por favor ingrese una contraseña';
     }
     if (value.length < 8) {
-      return 'Password must be at least 8 characters long';
+      return 'La contraseña debe tener al menos 8 caracteres.';
     }
-    if (!RegExp(r'[A-Z]').hasMatch(value)) {
-      return 'Password must contain at least one uppercase letter';
-    }
-    if (!RegExp(r'[a-z]').hasMatch(value)) {
-      return 'Password must contain at least one lowercase letter';
-    }
-    if (!RegExp(r'[0-9]').hasMatch(value)) {
-      return 'Password must contain at least one number';
-    }
-    if (!RegExp(r'[!@#\$&*~%^()\-_=+[\]{};:\",<.>/?\\|]').hasMatch(value)) {
-      return 'Password must contain at least one special character';
-    }
+    // if (!RegExp(r'[A-Z]').hasMatch(value)) {
+    //   return 'La contraseña debe contener al menos una letra mayúscula.';
+    // }
+    // if (!RegExp(r'[a-z]').hasMatch(value)) {
+    //   return 'La contraseña debe contener al menos una letra minúscula.';
+    // }
+    // if (!RegExp(r'[0-9]').hasMatch(value)) {
+    //   return 'La contraseña debe contener al menos un número.';
+    // }
+    // if (!RegExp(r'[!@#\$&*~%^()\-_=+[\]{};:\",<.>/?\\|]').hasMatch(value)) {
+    //   return 'La contraseña debe contener al menos un carácter especial.';
+    // }
     return null;
   }
 
@@ -94,11 +94,9 @@ class AuthController extends GetxController {
         signUpConfirmPasswordController.text.isNotEmpty &&
         signUpNameValidation == null &&
         signUpNameController.text.isNotEmpty &&
-        signUpIDValidation == null &&
-        signUpIDController.text.isNotEmpty &&
         signUpDateofBirthValidation == null &&
-        signUpDateofBirthController.text.isNotEmpty &&
-        isAdult.value)) {
+        signUpDateofBirthController.text.isNotEmpty)) {
+      print(signUpDateofBirthController);
       showErrorMsgSnackBar(
           'Please complete the form or verify that the entered data is correct.');
       return;

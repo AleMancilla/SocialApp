@@ -26,7 +26,7 @@ class _SignupFormSectionState extends State<SignupFormSection> {
         left: 20,
         right: 20,
       ),
-      decoration: BoxDecoration(color: Colors.white10),
+      decoration: BoxDecoration(color: Colors.white38),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -34,7 +34,7 @@ class _SignupFormSectionState extends State<SignupFormSection> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               CustomTextFile(
-                labelText: 'Email',
+                labelText: 'Correo',
                 controller: controller.signUpEmailController,
                 validation: controller.signUpEmailValidation,
                 onChanged: (value) {
@@ -45,7 +45,7 @@ class _SignupFormSectionState extends State<SignupFormSection> {
                 keyboardType: TextInputType.emailAddress,
               ),
               CustomTextFile(
-                labelText: 'Password',
+                labelText: 'Contraseña',
                 isSecret: true,
                 controller: controller.signUpPasswordController,
                 validation: controller.signUpPasswordValidation,
@@ -57,7 +57,7 @@ class _SignupFormSectionState extends State<SignupFormSection> {
                 keyboardType: TextInputType.visiblePassword,
               ),
               CustomTextFile(
-                labelText: 'Confirm Password',
+                labelText: 'Repita su contraseña',
                 isSecret: true,
                 controller: controller.signUpConfirmPasswordController,
                 validation: controller.signUpConfirmPasswordValidation,
@@ -69,7 +69,7 @@ class _SignupFormSectionState extends State<SignupFormSection> {
                 keyboardType: TextInputType.visiblePassword,
               ),
               CustomTextFile(
-                labelText: 'Name',
+                labelText: 'Nombre',
                 controller: controller.signUpNameController,
                 validation: controller.signUpNameValidation,
                 onChanged: (value) {
@@ -79,20 +79,20 @@ class _SignupFormSectionState extends State<SignupFormSection> {
                 },
                 keyboardType: TextInputType.name,
               ),
+              // CustomTextFile(
+              //   labelText: 'ID',
+              //   controller: controller.signUpIDController,
+              //   validation: controller.signUpIDValidation,
+              //   onChanged: (value) {
+              //     controller.signUpIDValidation =
+              //         controller.validateEmptyController(value);
+              //     setState(() {});
+              //   },
+              //   keyboardType: TextInputType.number,
+              // ),
               CustomTextFile(
-                labelText: 'ID',
-                controller: controller.signUpIDController,
-                validation: controller.signUpIDValidation,
-                onChanged: (value) {
-                  controller.signUpIDValidation =
-                      controller.validateEmptyController(value);
-                  setState(() {});
-                },
-                keyboardType: TextInputType.number,
-              ),
-              CustomTextFile(
-                labelText: 'Date of Birth',
-                hintText: 'Select your date of birth',
+                labelText: 'Fecha de nacimiento',
+                hintText: 'Elija una fecha',
                 controller: controller.signUpDateofBirthController,
                 validation: controller.signUpIDValidation,
                 onChanged: (value) {
@@ -102,26 +102,29 @@ class _SignupFormSectionState extends State<SignupFormSection> {
                 },
                 isCalendar: true,
               ),
-              Obx(() {
-                return Row(
-                  children: <Widget>[
-                    Checkbox(
-                      value: controller.isAdult.value,
-                      onChanged: (value) {
-                        controller.isAdult.value = value!;
-                      },
-                    ),
-                    Text("I declare that I am of legal age."),
-                  ],
-                );
-              }),
+              // Obx(() {
+              //   return Row(
+              //     children: <Widget>[
+              //       Checkbox(
+              //         value: controller.isAdult.value,
+              //         onChanged: (value) {
+              //           controller.isAdult.value = value!;
+              //         },
+              //       ),
+              //       Text(
+              //         "Declaro ser mayor de edad",
+              //         style: TextStyle(color: Colors.green[900]),
+              //       ),
+              //     ],
+              //   );
+              // }),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   // Implementar la lógica de registro aquí
                   controller.signUpActions();
                 },
-                child: Text('Sign Up'),
+                child: Text('Registrarse'),
               ),
               SizedBox(height: 10),
               TextButton(
@@ -130,7 +133,7 @@ class _SignupFormSectionState extends State<SignupFormSection> {
                       duration: Duration(milliseconds: 300),
                       curve: Curves.easeInOut);
                 },
-                child: Text('Already have an account? Login'),
+                child: Text('Ya tienes una cuenta? inicia sesion'),
               ),
             ],
           ),

@@ -42,6 +42,18 @@ dependencies:
   firebase_core: ^3.2.0
   firebase_auth: ^5.1.2
   cloud_firestore: ^5.1.0
+  app_usage: ^3.0.1
+  system_alert_window: ^2.0.0
+  easy_permission_validator: 
+  permission_handler: 
+  device_apps: 
+  usage_stats:
+  overlay_pop_up: ^1.0.3
+  package_info_plus:
+  flutter_time_picker_spinner: 
+  sqflite: ^2.0.0+4
+  path: ^1.8.0
+  # flutter_accessibility_service:
 
 
 dev_dependencies:
@@ -66,7 +78,10 @@ flutter_icons:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  fonts:
+    - family: paradice
+      fonts:
+        - asset: assets/fonts/paradice.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
